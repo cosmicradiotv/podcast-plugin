@@ -1,9 +1,9 @@
-<?php namespace CosmicRadioTV\U62;
+<?php namespace CosmicRadioTV\Podcast;
 
 use System\Classes\PluginBase;
 
 /**
- * u62 Plugin Information File
+ * Podcast Plugin Information File
  */
 class Plugin extends PluginBase
 {
@@ -16,8 +16,8 @@ class Plugin extends PluginBase
     public function pluginDetails()
     {
         return [
-            'name'        => 'u62',
-            'description' => 'No description provided yet...',
+            'name'        => 'Podcast',
+            'description' => 'Podcast plugin',
             'author'      => 'CosmicRadioTV',
             'icon'        => 'icon-leaf'
         ];
