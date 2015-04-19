@@ -1,0 +1,18 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    release_type:
+        label: cosmicradiotv.podcast::lang.release_type.singular
+        type: relation
+
+    url:
+        label: cosmicradiotv.podcast::lang.release.url
+        placeholder: cosmicradiotv.podcast::lang.release.url_placeholder
+        type: text
+
+    size:
+        label: cosmicradiotv.podcast::lang.release.size
+        default: 0
+        type: number

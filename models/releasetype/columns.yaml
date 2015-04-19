@@ -1,0 +1,20 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    name:
+        label: cosmicradiotv.podcast::lang.general.name
+        searchable: true
+
+    slug:
+        label: cosmicradiotv.podcast::lang.general.slug
+        searchable: true
+
+    type:
+        label: cosmicradiotv.podcast::lang.release_type.type
+        searchable: true
+
+    filetype:
+        label: cosmicradiotv.podcast::lang.release_type.filetype
+        searchable: true

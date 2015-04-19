@@ -1,0 +1,22 @@
+<?php /* A modified version of the default _toolbar.htm for relation managers that lets me only show the create button for tags if the user has the correct permission. */ ?>
+
+<div data-control="toolbar">
+
+    <?php foreach ($relationToolbarButtons as $button): ?>
+
+        <?php if ($button == 'update'): ?>
+            <?= $this->relationMakePartial('button_update', [
+                'relationManageId' => $relationViewModel->id
+            ]) ?>
+        <?php 
+        	// Checks for the correct permission to modify tags to determine if the create button should be displayed.
+        	elseif ($button == 'create'): ?>
+        	<?php if ($this->user->hasAccess('cosmicradiotv.podcast.access_tags')): ?>
+				<?= $this->relationMakePartial('button_'.$button) ?>
+			<?php endif ?>
+        <?php else: ?>
+            <?= $this->relationMakePartial('button_'.$button) ?>
+        <?php endif ?>
+
+    <?php endforeach ?>
+</div>

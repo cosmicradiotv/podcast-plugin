@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: cosmicradiotv.podcast::lang.tag.singular
+
+# Model Form Field configuration
+form: $/cosmicradiotv/podcast/models/tag/fields.yaml
+
+# Model Class name
+modelClass: CosmicRadioTV\Podcast\Models\Tag
+
+# Default redirect location
+defaultRedirect: cosmicradiotv/podcast/tags
+
+# Create page
+create:
+    title: cosmicradiotv.podcast::lang.tag.create
+    redirect: cosmicradiotv/podcast/tags/update/:id
+    redirectClose: cosmicradiotv/podcast/tags
+
+# Update page
+update:
+    title: cosmicradiotv.podcast::lang.tag.update
+    redirect: cosmicradiotv/podcast/tags
+    redirectClose: cosmicradiotv/podcast/tags
+
+# Preview page
+preview:
+    title: cosmicradiotv.podcast::lang.tag.preview

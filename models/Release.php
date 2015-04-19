@@ -26,11 +26,11 @@ use October\Rain\Database\Traits\Validation;
 class Release extends Model
 {
 
-    use Validation;
+    //use Validation;
 
     protected $table = 'cosmicradiotv_podcast_releases';
 
-    protected $fillable = ['episode_id', 'release_type_id', 'url', 'size'];
+    protected $fillable = ['episode', 'release_type', 'url', 'size'];
 
     public $rules = [
         'episode_id'      => ['required', 'exists:cosmicradiotv_podcast_episodes,id'],
@@ -46,7 +46,7 @@ class Release extends Model
 
     public $belongsTo = [
         'episode' => ['CosmicRadioTV\Podcast\Models\Episode'],
-        'type'    => ['CosmicRadioTV\Podcast\Models\ReleaseType'],
+        'release_type' => ['CosmicRadioTV\Podcast\Models\ReleaseType'],
     ];
 
 }

@@ -1,0 +1,47 @@
+# ===================================
+#  List Behavior Config
+# ===================================
+
+# Model List Column configuration
+list: $/cosmicradiotv/podcast/models/episode/columns.yaml
+
+# Model Class name
+modelClass: CosmicRadioTV\Podcast\Models\Episode
+
+# List Title
+title: cosmicradiotv.podcast::lang.episode.list_title
+
+# Link URL for each record
+recordUrl: cosmicradiotv/podcast/episodes/update/:id
+
+# Message to display if the list is empty
+noRecordsMessage: backend::lang.list.no_records
+
+# Records to display per page
+recordsPerPage: 20
+
+# Displays the list column set up button
+showSetup: true
+
+# Displays the sorting link on each column
+showSorting: true
+
+# Default sorting column
+# defaultSort:
+#     column: created_at
+#     direction: desc
+
+# Display checkboxes next to each record
+showCheckboxes: true
+
+# Toolbar widget configuration
+toolbar:
+    # Partial for toolbar buttons
+    buttons: list_toolbar
+
+    # Search widget configuration
+    search:
+        prompt: backend::lang.list.search_prompt
+
+# Adds the as of now non-functioning show filter
+filter: config_filter.yaml

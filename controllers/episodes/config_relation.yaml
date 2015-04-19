@@ -1,0 +1,32 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+tags:
+    label: Tags
+    view:
+        list: $/cosmicradiotv/podcast/models/tag/columns.yaml
+        toolbarButtons: add|remove|create
+        toolbarPartial: $/cosmicradiotv/podcast/controllers/tags/_relation_toolbar.htm
+        showSearch: true
+    manage:
+        form: $/cosmicradiotv/podcast/models/tag/fields.yaml
+        recordsPerPage: 10
+        context:
+            - create
+            - update
+        showSearch: true
+
+releases:
+    label: Releases
+    deferredBinding: true
+    view:
+        list: $/cosmicradiotv/podcast/models/release/columns.yaml
+        toolbarButtons: create|delete
+    manage:
+        form: $/cosmicradiotv/podcast/models/release/fields.yaml
+        list: $/cosmicradiotv/podcast/models/release/columns.yaml
+        recordsPerPage: 10
+        context:
+            - create
+            - update

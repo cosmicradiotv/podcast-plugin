@@ -1,0 +1,15 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+  name:
+    label: cosmicradiotv.podcast::lang.general.name
+    placeholder: cosmicradiotv.podcast::lang.tag.name_placeholder
+  slug:
+    label: cosmicradiotv.podcast::lang.general.slug
+    placeholder: cosmicradiotv.podcast::lang.tag.slug_placeholder
+    attributes:
+        data-input-preset: 'input[name="Tag[name]"]'
+        data-input-preset-type: slug
+        data-input-preset-closest-parent: form

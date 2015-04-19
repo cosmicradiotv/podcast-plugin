@@ -9,6 +9,7 @@ use October\Rain\Database\Model;
 use October\Rain\Database\Traits\Sluggable;
 use October\Rain\Database\Traits\Validation;
 use System\Models\File;
+use CosmicRadioTV\Podcast\Models\Release;
 
 /**
  * Episode
@@ -27,9 +28,11 @@ use System\Models\File;
  * @property      Carbon           $updated_at Show update time
  * @property-read Show             $show       The show of this episode
  * @property-read Collection|Tag[] $tags       Tags for this episode
+ * @property-read Release          $releases   Releases for this episode
  * @property      File             $image      Shows image
  * @method \October\Rain\Database\Relations\BelongsTo show()
  * @method \October\Rain\Database\Relations\BelongsToMany tags()
+ * @method \October\Rain\Database\Relations\HasMany releases()
  * @method \October\Rain\Database\Relations\MorphOne image()
  */
 class Episode extends Model
@@ -38,7 +41,7 @@ class Episode extends Model
     use Sluggable;
     use Validation {
         makeValidator as baseMakeValidator;
-    };
+    }
 
     protected $table = 'cosmicradiotv_podcast_episodes';
 
@@ -63,7 +66,6 @@ class Episode extends Model
     /*
      * Relations
      */
-
     public $belongsTo = [
         'show' => ['CosmicRadioTV\Podcast\Models\Show'],
     ];
@@ -72,9 +74,22 @@ class Episode extends Model
         'tags' => ['CosmicRadioTV\Podcast\Models\Tag', 'table' => 'cosmicradiotv_podcast_episodes_tags'],
     ];
 
+    // Needed this to properly display releases in the create/update episode form
+    public $hasMany = [
+        'releases' =>  ['CosmicRadioTV\Podcast\Models\Release'],
+    ];
+
     public $attachOne = [
         'image' => ['System\Models\File']
     ];
+
+    /**
+     * Runs before an episode is deleted to remove all the releases that depend on it
+     */
+    protected function beforeDelete()
+    {
+        $releases = Release::where('episode_id', '=', $this->id)->delete();
+    }
 
     /**
      * Modifies validation rules so unique checks take show_id into account
@@ -124,5 +139,7 @@ class Episode extends Model
 
         return $_value;
     }
+
+
 
 }

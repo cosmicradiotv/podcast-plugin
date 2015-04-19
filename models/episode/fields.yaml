@@ -1,0 +1,87 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    id:
+        label: ID
+    title:
+        label: cosmicradiotv.podcast::lang.episode.title
+        span: left
+        placeholder: cosmicradiotv.podcast::lang.episode.title_placeholder
+
+    slug:
+        label: cosmicradiotv.podcast::lang.general.slug
+        span: right
+        placeholder: cosmicradiotv.podcast::lang.episode.slug_placeholder
+        attributes:
+            data-input-preset: 'input[name="Episode[title]"]'
+            data-input-preset-type: slug
+            data-input-preset-closest-parent: form
+    
+    release_section:
+        type: section
+
+    release:
+        label: cosmicradiotv.podcast::lang.episode.release
+        span: left
+        type: datepicker
+        mode: datetime
+
+    show:
+        label: cosmicradiotv.podcast::lang.show.singular
+        span: right
+        type: recordfinder
+        list: $/cosmicradiotv/podcast/models/show/columns.yaml
+        prompt: Click the %s button to find a show
+        nameFrom: name
+
+    published:
+        label: cosmicradiotv.podcast::lang.episode.published
+        span: left
+        type: switch
+
+tabs:
+    stretch: true
+    fields:
+        summary:
+            tab: cosmicradiotv.podcast::lang.episode.tab_info
+            label: cosmicradiotv.podcast::lang.episode.summary
+            commentAbove: cosmicradiotv.podcast::lang.episode.summary_comment
+            type: textarea
+            size: small
+
+        content:
+            tab: cosmicradiotv.podcast::lang.episode.tab_info
+            label: cosmicradiotv.podcast::lang.episode.content
+            commentAbove: cosmicradiotv.podcast::lang.episode.content_comment
+            type: richeditor
+            size: giant
+
+        # Unsure if this should be a field, or if we want to find a method to pull that from the media
+        length:
+            tab: cosmicradiotv.podcast::lang.episode.tab_media
+            label: cosmicradiotv.podcast::lang.episode.length
+            type: number
+            default: 0
+            commentAbove: (in seconds)
+
+        image:
+            tab: cosmicradiotv.podcast::lang.episode.tab_media
+            label: cosmicradiotv.podcast::lang.episode.image
+            type: fileupload
+            mode: image
+
+        tags:
+            tab: cosmicradiotv.podcast::lang.episode.tab_tags
+            type: partial
+            path: @/plugins/cosmicradiotv/podcast/controllers/tags/_form_tags.htm
+
+        releases:
+            tab: cosmicradiotv.podcast::lang.episode.tab_media
+            type: partial
+            path: @/plugins/cosmicradiotv/podcast/controllers/episodes/_form_releases.htm
+
+
+
+

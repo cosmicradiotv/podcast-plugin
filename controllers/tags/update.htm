@@ -1,0 +1,56 @@
+<?php Block::put('breadcrumb') ?>
+    <ul>
+        <li><a href="<?= Backend::url('cosmicradiotv/podcast/tags') ?>"><?= e(trans('cosmicradiotv.podcast::lang.tag.plural')) ?></a></li>
+        <li><?= e($this->pageTitle) ?></li>
+    </ul>
+<?php Block::endPut() ?>
+
+<?php if (!$this->fatalError): ?>
+
+    <?= Form::open(['class' => 'layout']) ?>
+
+        <div class="layout-row">
+            <?= $this->formRender() ?>
+        </div>
+
+        <div class="form-buttons">
+            <div class="loading-indicator-container">
+                <button
+                    type="submit"
+                    data-request="onSave"
+                    data-request-data="redirect:0"
+                    data-hotkey="ctrl+s, cmd+s"
+                    data-load-indicator="<?= e(trans('cosmicradiotv.podcast::lang.tag.saving')) ?>"
+                    class="btn btn-primary">
+                    <?= '<u>'.substr(e(trans('cosmicradiotv.podcast::lang.general.save')),0,1).'</u>'.substr(e(trans('cosmicradiotv.podcast::lang.general.save')),1) ?>
+                </button>
+                <button
+                    type="button"
+                    data-request="onSave"
+                    data-request-data="close:1"
+                    data-hotkey="ctrl+enter, cmd+enter"
+                    data-load-indicator="<?= e(trans('cosmicradiotv.podcast::lang.tag.saving')) ?>"
+                    class="btn btn-default">
+                    <?= e(trans('cosmicradiotv.podcast::lang.general.save_and_close')) ?>
+                </button>
+                <button
+                    type="button"
+                    class="oc-icon-trash-o btn-icon danger pull-right"
+                    data-request="onDelete"
+                    data-load-indicator="<?= e(trans('cosmicradiotv.podcast::lang.tag.deleting')) ?>"
+                    data-request-confirm="<?= e(trans('cosmicradiotv.podcast::lang.tag.confirm_delete')) ?>">
+                </button>
+                <span class="btn-text">
+                    or <a href="<?= Backend::url('cosmicradiotv/podcast/tags') ?>"><?= e(trans('cosmicradiotv.podcast::lang.general.cancel')) ?></a>
+                </span>
+            </div>
+        </div>
+
+    <?= Form::close() ?>
+
+<?php else: ?>
+
+    <p class="flash-message static error"><?= e($this->fatalError) ?></p>
+    <p><a href="<?= Backend::url('cosmicradiotv/podcast/tags') ?>" class="btn btn-default"><?= e(trans('cosmicradiotv.podcast::lang.tag.return_to_list')) ?></a></p>
+
+<?php endif ?>

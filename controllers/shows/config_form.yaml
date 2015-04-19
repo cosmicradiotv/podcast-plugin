@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: cosmicradiotv.podcast::lang.show.singular
+
+# Model Form Field configuration
+form: $/cosmicradiotv/podcast/models/show/fields.yaml
+
+# Model Class name
+modelClass: CosmicRadioTV\Podcast\Models\Show
+
+# Default redirect location
+defaultRedirect: cosmicradiotv/podcast/shows
+
+# Create page
+create:
+    title: cosmicradiotv.podcast::lang.show.create
+    redirect: cosmicradiotv/podcast/shows/update/:id
+    redirectClose: cosmicradiotv/podcast/shows
+
+# Update page
+update:
+    title: cosmicradiotv.podcast::lang.show.update
+    redirect: cosmicradiotv/podcast/shows
+    redirectClose: cosmicradiotv/podcast/shows
+
+# Preview page
+preview:
+    title: cosmicradiotv.podcast::lang.show.preview

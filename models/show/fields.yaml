@@ -1,0 +1,30 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: cosmicradiotv.podcast::lang.general.name
+        placeholder: cosmicradiotv.podcast::lang.show.name_placeholder
+        span: left
+
+    image:
+        label: cosmicradiotv.podcast::lang.show.image
+        span: right
+        type: fileupload
+        mode: image
+
+    slug:
+        label: cosmicradiotv.podcast::lang.general.slug
+        placeholder: cosmicradiotv.podcast::lang.show.slug_placeholder
+        span: left
+        attributes:
+            data-input-preset: 'input[name="Show[name]"]'
+            data-input-preset-type: slug
+            data-input-preset-closest-parent: form
+
+
+    description:
+        label: cosmicradiotv.podcast::lang.show.description
+        commentAbove: cosmicradiotv.podcast::lang.show.description_comment
+        type: textarea

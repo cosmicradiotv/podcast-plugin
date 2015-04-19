@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: cosmicradiotv.podcast::lang.release_type.singular
+
+# Model Form Field configuration
+form: $/cosmicradiotv/podcast/models/releasetype/fields.yaml
+
+# Model Class name
+modelClass: CosmicRadioTV\Podcast\Models\ReleaseType
+
+# Default redirect location
+defaultRedirect: cosmicradiotv/podcast/releasetypes
+
+# Create page
+create:
+    title: cosmicradiotv.podcast::lang.release_type.create
+    redirect: cosmicradiotv/podcast/releasetypes/update/:id
+    redirectClose: cosmicradiotv/podcast/releasetypes
+
+# Update page
+update:
+    title: cosmicradiotv.podcast::lang.release_type.update
+    redirect: cosmicradiotv/podcast/releasetypes
+    redirectClose: cosmicradiotv/podcast/releasetypes
+
+# Preview page
+preview:
+    title: cosmicradiotv.podcast::lang.release_type.preview

@@ -1,0 +1,25 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: cosmicradiotv.podcast::lang.general.name
+        placeholder: cosmicradiotv.podcast::lang.release_type.name_placeholder
+    slug:
+        label: cosmicradiotv.podcast::lang.general.slug
+        placeholder: cosmicradiotv.podcast::lang.release_type.slug_placeholder
+        attributes:
+            data-input-preset: 'input[name="ReleaseType[name]"]'
+            data-input-preset-type: slug
+            data-input-preset-closest-parent: form
+    type:
+        label: cosmicradiotv.podcast::lang.release_type.type
+        type: radio
+        options:
+            audio: cosmicradiotv.podcast::lang.release_type.type_audio
+            video: cosmicradiotv.podcast::lang.release_type.type_video
+            youtube: cosmicradiotv.podcast::lang.release_type.type_youtube
+    filetype:
+        label: cosmicradiotv.podcast::lang.release_type.filetype
+        placeholder: cosmicradiotv.podcast::lang.release_type.filetype_placeholder

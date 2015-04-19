@@ -1,0 +1,9 @@
+<?php if ($this->user->hasAccess('cosmicradiotv.podcast.access_shows_all')): ?>
+<div data-control="toolbar">
+    <a
+        href="<?= Backend::url('cosmicradiotv/podcast/shows/create') ?>"
+        class="btn btn-primary oc-icon-plus">
+        <?= e(trans('cosmicradiotv.podcast::lang.show.new')) ?>
+    </a>
+</div>
+<? endif; ?>

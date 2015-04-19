@@ -1,0 +1,13 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    url:
+        label: cosmicradiotv.podcast::lang.release.url
+    release_type:
+        label: cosmicradiotv.podcast::lang.release_type.singular
+        relation: release_type
+        select: name
+    size:
+        label: cosmicradiotv.podcast::lang.release.size

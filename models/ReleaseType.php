@@ -47,7 +47,7 @@ class ReleaseType extends Model
      */
 
     public $hasMany = [
-        'releases' => ['CosmicRadioTV\Podcast\Models\Release'],
+        'releases' => ['CosmicRadioTV\Podcast\Models\Release','delete' => 'true'],
     ];
 
 
