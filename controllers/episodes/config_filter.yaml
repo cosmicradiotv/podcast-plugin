@@ -7,4 +7,4 @@ scopes:
         label: cosmicradiotv.podcast::lang.episode.filter_show
         modelClass: CosmicRadioTV\Podcast\Models\Show
         nameFrom: name
-        condition: show_id in (:filtered)
+        conditions: show_id in (:filtered)
