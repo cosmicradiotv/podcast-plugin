@@ -3,8 +3,6 @@
 # ===================================
 
 fields:
-    id:
-        label: ID
     title:
         label: cosmicradiotv.podcast::lang.episode.title
         span: left
