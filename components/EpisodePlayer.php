@@ -37,6 +37,16 @@ class EpisodePlayer extends ComponentBase
                 'title' =>          'Release Type',
                 'description' =>    'If no release id is set, you can use this to choose the first release of a release type.',
                 'type' =>           'dropdown',
+            ],
+            'width' => [
+                'title' =>          'Width',
+                'type' =>           'string',
+                'default' =>        '640',
+            ],
+            'height' => [
+                'title' =>          'Height',
+                'type' =>           'string',
+                'default' =>        '360',
             ]
         ];
     }

@@ -1,15 +1,15 @@
 $(function() {
 	$('video,audio').mediaelementplayer({
 	    // if the <video width> is not specified, this is the default
-	    defaultVideoWidth: 480,
+	    defaultVideoWidth: 640,
 	    // if the <video height> is not specified, this is the default
-	    defaultVideoHeight: 270,
+	    defaultVideoHeight: 360,
 	    // if set, overrides <video width>
 	    videoWidth: -1,
 	    // if set, overrides <video height>
 	    videoHeight: -1,
 	    // width of audio player
-	    audioWidth: 400,
+	    audioWidth: 640,
 	    // height of audio player
 	    audioHeight: 30,
 	    // initial volume when the player starts
