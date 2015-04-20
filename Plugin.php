@@ -62,7 +62,7 @@ class Plugin extends PluginBase
             'cosmicradiotv.podcast.access_release_types' => ['tab' => 'cosmicradiotv.podcast::lang.permissions.tab_labels.general', 'label' => 'cosmicradiotv.podcast::lang.permissions.labels.access_release_types'],
             'cosmicradiotv.podcast.access_tags' => ['tab' => 'cosmicradiotv.podcast::lang.permissions.tab_labels.general', 'label' => 'cosmicradiotv.podcast::lang.permissions.labels.access_tags'],
             'cosmicradiotv.podcast.access_shows_all' => ['tab' => 'cosmicradiotv.podcast::lang.permissions.tab_labels.general', 'label' => 'cosmicradiotv.podcast::lang.permissions.labels.access_shows_all'],
-            'cosmicradiotv.podcast.access_shows' => ['tab' => 'cosmicradiotv.podcast::lang.permissions.tab_labels.general', 'label' => 'cosmicradiotv.podcast::lang.permissions.labels.access_episodes'],
+            'cosmicradiotv.podcast.access_shows' => ['tab' => 'cosmicradiotv.podcast::lang.permissions.tab_labels.general', 'label' => 'cosmicradiotv.podcast::lang.permissions.labels.access_shows'],
             'cosmicradiotv.podcast.access_episodes_all' => ['tab' => 'cosmicradiotv.podcast::lang.permissions.tab_labels.general', 'label' => 'cosmicradiotv.podcast::lang.permissions.labels.access_episodes_all'],
             'cosmicradiotv.podcast.access_episodes' => ['tab' => 'cosmicradiotv.podcast::lang.permissions.tab_labels.general', 'label' => 'cosmicradiotv.podcast::lang.permissions.labels.access_episodes'],
         ];
