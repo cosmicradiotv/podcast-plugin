@@ -13,6 +13,8 @@
   },
   "homepage": "https://github.com/cosmicradiotv/podcast-plugin#readme",
   "devDependencies": {
-    "grunt": "^0.4.5"
+    "grunt": "^0.4.5",
+    "grunt-bower-task": "^0.4.0",
+    "grunt-text-replace": "^0.4.0"
   }
 }

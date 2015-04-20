@@ -18,5 +18,16 @@
   "dependencies": {
     "mediaelement": "~2.16.4",
     "jquery": "~2.1.3"
+  },
+  "exportsOverride": {
+    "mediaelement": {
+      "js":["build/*.js"],
+      "css":["build/*.css"],
+      "img":["build/*.gif","build/*.png","build/*.svg"],
+      "embed":["build/*.swf","build/*.xap"]
+    },
+    "jquery": {
+      "js":"dist/*.js"
+    }
   }
 }
