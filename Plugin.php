@@ -78,7 +78,7 @@ class Plugin extends PluginBase
 
     /**
      * Sets up the back end navigation for the plugin
-     * @return @array The navigation array.
+     * @return array The navigation array.
      */
     public function registerNavigation()
     {
