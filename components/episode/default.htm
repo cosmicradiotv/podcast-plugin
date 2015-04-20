@@ -1,0 +1,7 @@
+{% if __SELF__.playerReleaseType.type == 'video' %}
+<video src="{{ __SELF__.playerRelease.url }}" width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" controls></video>
+{% elseif __SELF__.playerReleaseType.type == 'audio' %}
+<audio src="{{ __SELF__.playerRelease.url }}" width="{{ __SELF__.property('playerWidth') }}" controls></audio>
+{% elseif __SELF__.playerReleaseType.type == 'youtube' %}
+<iframe width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" src="{{ __SELF__.playerYoutubeEmbedUrl }}" frameborder="0" allowfullscreen></iframe>
+{% endif %}

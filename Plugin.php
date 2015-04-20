@@ -29,7 +29,7 @@ class Plugin extends PluginBase
     public function registerComponents()
     {
         return [
-            'CosmicRadioTV\Podcast\Components\EpisodePlayer' => 'episodePlayer'
+            'CosmicRadioTV\Podcast\Components\Episode' => 'episode'
         ];
     }
 
