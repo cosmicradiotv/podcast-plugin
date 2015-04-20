@@ -1,3 +1,5 @@
+<h1>{{ __SELF__.episode.title }}</h1>
+
 {% if __SELF__.playerReleaseType.type == 'video' %}
 <video src="{{ __SELF__.playerRelease.url }}" width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" controls></video>
 {% elseif __SELF__.playerReleaseType.type == 'audio' %}
@@ -5,3 +7,10 @@
 {% elseif __SELF__.playerReleaseType.type == 'youtube' %}
 <iframe width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" src="{{ __SELF__.playerYoutubeEmbedUrl }}" frameborder="0" allowfullscreen></iframe>
 {% endif %}
+
+<h2>Direct Release Links</h2>
+<ul>
+{% for release in __SELF__.releases %}
+<li><a href="{{ release.url }}">{{ release.relations['release_type'].name }}</a></li>
+{% endfor %}
+</ul>

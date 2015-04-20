@@ -9,6 +9,14 @@ use CosmicRadioTV\Podcast\Classes\VideoUrlParser;
 
 class Episode extends ComponentBase
 {
+    public $episode;
+    public $show;
+    public $tags;
+    public $releases;
+
+    public $playerRelease;
+    public $playerReleaseType;
+    public $playerYoutubeEmbedUrl;
 
     public function componentDetails()
     {
@@ -69,39 +77,38 @@ class Episode extends ComponentBase
         return ReleaseType::all()->lists('name','slug');
     }
 
-    public function playerRelease()
-    {
-        if (trim($this->property('playerReleaseId')) !== '') {
-            return Release::where('id', '=', trim($this->property('playerReleaseId')))->get()->first();
-        } else {
-            $episode = Models\Episode::where('slug','=',trim($this->property('episodeSlug')))->with(['releases' => function($q) {
-                if (trim($this->property('playerReleaseType')) !== '') {
-                    $q->whereHas('release_type', function($rt_q) {
-                        $rt_q->where('slug','=',trim($this->property('playerReleaseType')));
-                    });
-                }
-            }])->get()->first();
-
-            return $episode->relations['releases']->first();
-        }
-    }
-
-    public function playerReleaseType()
-    {
-        $release = $this->playerRelease();
-        return ReleaseType::where('id','=',$release->release_type_id)->get()->first();
-    }
-
     /**
-     * Gets the embed url from a youtube url.
-     * Uses https://gist.github.com/astockwell/11055104
-     * @return string Youtube embed url
+     * Runs when the page or layout loads (sets up properties available to the component partial)
      */
-    public function playerYoutubeEmbedUrl() {
-        $release = $this->playerRelease();
-        $releaseType = $this->playerReleaseType();
-        if ($releaseType->type == "youtube") {
-            return VideoURLParser::get_url_embed($release->url);
+    function onRun()
+    {
+        $episodeSlug = trim($this->property('episodeSlug'));
+        $this->episode = Models\Episode::where('slug', '=', $episodeSlug)->with(['releases'=>function($q){$q->with('release_type');},'image','tags','show'])->get()->first();
+
+        $this->show = $this->episode->relations['show']->first();
+        $this->tags = $this->episode->relations['tags'];
+        $this->releases = $this->episode->relations['releases'];
+
+        if (trim($this->property('playerReleaseId')) !== '') {
+            $this->playerRelease = $this->releases->find(trim($this->property('playerReleaseId')));
+        } else if (trim($this->property('playerReleaseType')) !== '') {
+            // Doing foreach instead of $this->releases->filter so I can break after I find one
+            foreach($this->releases as $release) {
+                if($release->relations['release_type']->slug === trim($this->property('playerReleaseType'))) {
+                    $this->playerRelease = $release;
+                    //break;
+                }
+            }
+        } else {
+            $this->playerRelease = $this->releases->first();
         }
-    }
+
+        $this->playerReleaseType = $this->playerRelease->relations['release_type'];
+
+        if ($this->playerReleaseType->type === "youtube") {
+            // Gets the embed url from a youtube url.
+            // Uses https://gist.github.com/astockwell/11055104
+            $this->playerYoutubeEmbedUrl = VideoURLParser::get_url_embed($this->playerRelease->url);
+        }
+    }   
 }
