@@ -96,7 +96,7 @@ class Episode extends ComponentBase
             foreach($this->releases as $release) {
                 if($release->relations['release_type']->slug === trim($this->property('playerReleaseType'))) {
                     $this->playerRelease = $release;
-                    //break;
+                    break;
                 }
             }
         } else {
