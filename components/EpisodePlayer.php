@@ -72,14 +72,14 @@ class EpisodePlayer extends ComponentBase
 
     public function release()
     {
-        $release = null;
-        if (trim($this->property('releaseId')) != false) {
+        $release_query = null;
+        if (trim($this->property('releaseId')) !== '') {
             $release_query = Release::where('id', '=', trim($this->property('releaseId')));
         } else {
             $episode = Episode::where('slug','=',trim($this->property('episodeSlug')))->take(1)->get()->first();
             if (!empty($episode)) {
                 $release_query = Release::where('episode_id','=',$episode->id);
-                if (trim($this->property('releaseType')) != false) {
+                if (trim($this->property('releaseType')) !== '') {
                     $release_type = ReleaseType::where('slug','=',trim($this->property('releaseType')))->take(1)->get()->first();
 
                     if (!empty($release_type)) {
@@ -88,7 +88,9 @@ class EpisodePlayer extends ComponentBase
                 }
             }
         }
-        return $release_query->take(1)->get()->first();;
+        if (!empty($release_query)) {
+            return $release_query->take(1)->get()->first();;
+        }
     }
 
     public function releaseType()

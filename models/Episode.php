@@ -88,7 +88,7 @@ class Episode extends Model
      */
     protected function beforeDelete()
     {
-        $releases = Release::where('episode_id', '=', $this->id)->delete();
+        Release::where('episode_id', '=', $this->id)->delete();
     }
 
     /**
