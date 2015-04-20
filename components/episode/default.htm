@@ -1,4 +1,5 @@
 <h1>{{ __SELF__.episode.title }}</h1>
+<p>Show: {{__SELF__.show.name}}</p>
 
 {% if __SELF__.playerReleaseType.type == 'video' %}
 <video src="{{ __SELF__.playerRelease.url }}" width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" controls></video>

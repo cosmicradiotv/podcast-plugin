@@ -80,7 +80,7 @@ class Episode extends ComponentBase
     /**
      * Runs when the page or layout loads (sets up properties available to the component partial)
      */
-    function onRun()
+    public function onRun()
     {
         $episodeSlug = trim($this->property('episodeSlug'));
         $this->episode = Models\Episode::where('slug', '=', $episodeSlug)->with(['releases'=>function($q){$q->with('release_type');},'image','tags','show'])->get()->first();
