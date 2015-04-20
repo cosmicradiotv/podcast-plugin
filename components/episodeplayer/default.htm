@@ -1,7 +1,7 @@
 {% if __SELF__.releaseType.type == 'video' %}
-<video src="{{ __SELF__.release.url }}" width="{{ __SELF__.property('width') }}" height="{{ __SELF__.property('height') }}"></video>
+<video src="{{ __SELF__.release.url }}" width="{{ __SELF__.property('width') }}" height="{{ __SELF__.property('height') }}" controls></video>
 {% elseif __SELF__.releaseType.type == 'audio' %}
-<audio src="{{ __SELF__.release.url }}" width="{{ __SELF__.property('width') }}"></audio>
+<audio src="{{ __SELF__.release.url }}" width="{{ __SELF__.property('width') }}" controls></audio>
 {% elseif __SELF__.releaseType.type == 'youtube' %}
 <iframe width="{{ __SELF__.property('width') }}" height="{{ __SELF__.property('height') }}" src="{{ __SELF__.youtubeEmbedUrl }}" frameborder="0" allowfullscreen></iframe>
 {% endif %}

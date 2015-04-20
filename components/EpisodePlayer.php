@@ -99,15 +99,6 @@ class EpisodePlayer extends ComponentBase
         return ReleaseType::where('id','=',$release->release_type_id)->take(1)->get()->first();
     }
 
-    public function onRun()
-    {
-        $this->addJs('/plugins/cosmicradiotv/podcast/assets/vendor/jquery/js/jquery.min.js');
-        $this->addJs('/plugins/cosmicradiotv/podcast/assets/vendor/mediaelement/js/mediaelement-and-player.min.js');
-        $this->addJs('/plugins/cosmicradiotv/podcast/assets/js/podcast.js');
-
-        $this->addCss('/plugins/cosmicradiotv/podcast/assets/vendor/mediaelement/css/mediaelementplayer.css');
-    }
-
     /**
      * Gets the embed url from a youtube url.
      * Uses https://gist.github.com/astockwell/11055104
