@@ -26,6 +26,13 @@ class Plugin extends PluginBase
         ];
     }
 
+    public function registerComponents()
+    {
+        return [
+            'CosmicRadioTV\Podcast\Components\EpisodePlayer' => 'episodePlayer'
+        ];
+    }
+
     /**
      * Called right before the request route.
      */

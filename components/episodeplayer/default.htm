@@ -1,0 +1,5 @@
+{% if __SELF__.releaseType.type == 'video' %}
+<video src="{{ __SELF__.release.url }}"></video>
+{% elseif __SELF__.releaseType.type == 'audio' %}
+<audio src="{{ __SELF__.release.url }}"></audio>
+{% else %}{# Youtube #}{% endif %}
