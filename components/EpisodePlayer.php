@@ -32,11 +32,14 @@ class EpisodePlayer extends ComponentBase
                 'description' =>    'Choose a specific release (otherwise defaults to first one).',
                 'type' =>           'dropdown',
                 'depends' =>        ['episode_slug'],
+                'placeholder'       => 'Select Release',
             ],
             'releaseType' => [
                 'title' =>          'Release Type',
                 'description' =>    'If no release id is set, you can use this to choose the first release of a release type.',
                 'type' =>           'dropdown',
+                'depends' =>        ['episode_slug'],
+                'placeholder'       => 'Select Release Type',
             ],
             'width' => [
                 'title' =>          'Width',
@@ -54,31 +57,44 @@ class EpisodePlayer extends ComponentBase
     public function getReleaseIdOptions()
     {
         $episodeSlug = Request::input('episodeSlug');
-        $episode = Episode::where('slug', '=', $episodeSlug)->firstOrFail();
+        $episode = Episode::where('slug', '=', $episodeSlug)->take(1)->get()->first();
+        if (!empty($episode)) {
+            return Release::where('episode_id', '=', $episode->id)->lists('url','id');
+        } else {
+            return [];
+        }
+    }
 
-        return Release::where('episode_id', '=', $episode->id)->lists('url','id');
+    public function getReleaseTypeOptions()
+    {
+        return ReleaseType::all()->lists('name','slug');
     }
 
     public function release()
     {
         $release = null;
         if (trim($this->property('releaseId')) != false) {
-            $release = Release::where('id', '=', trim($this->property('releaseId')))->firstOrFail();
+            $release_query = Release::where('id', '=', trim($this->property('releaseId')));
         } else {
-            $episode = Episode::where('slug','=',trim($this->property('episodeSlug')))->firstOrFail();
-            $release_query = Release::where('episode_id','=',$episode->id);
-            if (trim($this->property('releaseType')) != false) {
-                $release_query = $release_query->where('release_type_id','=',trim($this->property('releaseType')));
+            $episode = Episode::where('slug','=',trim($this->property('episodeSlug')))->take(1)->get()->first();
+            if (!empty($episode)) {
+                $release_query = Release::where('episode_id','=',$episode->id);
+                if (trim($this->property('releaseType')) != false) {
+                    $release_type = ReleaseType::where('slug','=',trim($this->property('releaseType')))->take(1)->get()->first();
+
+                    if (!empty($release_type)) {
+                        $release_query = $release_query->where('release_type_id','=',$release_type->id);
+                    }
+                }
             }
-            $release = $release_query->firstOrFail();
         }
-        return $release;
+        return $release_query->take(1)->get()->first();;
     }
 
     public function releaseType()
     {
         $release = $this->release();
-        return ReleaseType::where('id','=',$release->release_type_id)->firstOrFail();
+        return ReleaseType::where('id','=',$release->release_type_id)->take(1)->get()->first();
     }
 
     public function onRun()
