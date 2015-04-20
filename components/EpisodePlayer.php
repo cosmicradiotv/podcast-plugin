@@ -5,6 +5,7 @@ use Cms\Classes\ComponentBase;
 use CosmicRadioTV\Podcast\Models\Episode;
 use CosmicRadioTV\Podcast\Models\Release;
 use CosmicRadioTV\Podcast\Models\ReleaseType;
+use CosmicRadioTV\Podcast\Classes\VideoUrlParser;
 
 class EpisodePlayer extends ComponentBase
 {
@@ -77,5 +78,18 @@ class EpisodePlayer extends ComponentBase
         $this->addJs('/plugins/cosmicradiotv/podcast/assets/js/podcast.js');
 
         $this->addCss('/plugins/cosmicradiotv/podcast/assets/vendor/mediaelement/css/mediaelementplayer.css');
+    }
+
+    /**
+     * Gets the embed url from a youtube url.
+     * Uses https://gist.github.com/astockwell/11055104
+     * @return string Youtube embed url
+     */
+    public function youtubeEmbedUrl() {
+        $release = $this->release();
+        $releaseType = $this->releaseType();
+        if ($releaseType->type == "youtube") {
+            return VideoURLParser::get_url_embed($release->url);
+        }
     }
 }
