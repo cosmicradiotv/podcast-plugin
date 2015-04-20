@@ -1,0 +1,22 @@
+{
+  "name": "podcast-plugin",
+  "version": "1.0.3",
+  "homepage": "https://github.com/cosmicradiotv/podcast-plugin",
+  "authors": [
+    "CosmicRadio.TV <devteam@cosmicradio.tv>"
+  ],
+  "description": "A platform for podcast networks using OctoberCMS",
+  "main": "Plugin.php",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "mediaelement": "~2.16.4",
+    "jquery": "~2.1.3"
+  }
+}
