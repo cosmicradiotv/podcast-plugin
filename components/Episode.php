@@ -65,9 +65,10 @@ class Episode extends ComponentBase
     public function getPlayerReleaseIdOptions()
     {
         $episodeSlug = Request::input('episodeSlug');
+
         $episode = Models\Episode::where('slug', '=', $episodeSlug)->with('releases')->get()->first();
         
-        if (!$episode->relations['releases']->isEmpty()) {
+        if (!empty($episode) && !$episode->relations['releases']->isEmpty()) {
             return $episode->relations['releases']->lists('url','id');
         }
     }
