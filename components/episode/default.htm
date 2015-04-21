@@ -5,53 +5,12 @@
 
         {% partial __SELF__~"::player" %}
 
+        <p>{{ __SELF__.episode.summary|e|nl2br }}</p>
 
+        <p>Released: {{ __SELF__.episode.release|date("M d, Y")}} | Duration: {{ __SELF__.episode.length|sectotime }}</p>
+
+        <h3>Show Notes</h3>
+
+        {{ __SELF__.episode.content|raw }}
     </div>
 </div>
-
-{# 
-
-Video Player 
-
-#}
-{% if __SELF__.playerRelease.release_type.type == 'video' %}
-<video src="{{ __SELF__.playerRelease.url }}"
-{# Load the image if the episode has one. #}
-{% if __SELF__.episode.image.getPath() is not empty %}poster="{{ __SELF__.episode.image.getPath() }}"{% endif %} 
-width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" controls></video>
-
-{# 
-
-Audio Player 
-
-#}
-{% elseif __SELF__.playerRelease.release_type.type == 'audio' %}
-{# Load the image if the episode has one. #}
-{% if __SELF__.episode.image.getPath() is not empty %}
-<p><img src="{{ __SELF__.episode.image.getPath() }}" width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" /></p>
-{% endif %}
-<audio src="{{ __SELF__.playerRelease.url }}" width="{{ __SELF__.property('playerWidth') }}" controls></audio>
-
-{# 
-
-Youtube Player 
-
-#}
-{% elseif __SELF__.playerRelease.release_type.type == 'youtube' %}
-<iframe width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" src="{{ __SELF__.playerYoutubeEmbedUrl }}" frameborder="0" allowfullscreen></iframe>
-{% endif %}
-{# 
-
-Meta area 
-
-#}
-<p>Released: {{ __SELF__.episode.release|date("M d, Y")}} | Duration: {{ __SELF__.episode.length|sectotime }}
-{% for release in __SELF__.episode.releases %}
- | <a href="{{ release.url }}">{{ release.release_type.name }}</a></li>
-{% endfor %}</p>
-
-<h3>Summary</h3>
-<p>{{ __SELF__.episode.summary|e|nl2br }}</p>
-
-<h3>Show Notes</h3>
-{{ __SELF__.episode.content|raw }}
