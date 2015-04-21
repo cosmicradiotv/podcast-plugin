@@ -3,12 +3,12 @@
 # ===================================
 
 columns:
+    id:
+        label: cosmicradiotv.podcast::lang.general.id
+        invisible: true
+
     title:
         label: cosmicradiotv.podcast::lang.episode.title
-        searchable: true
-
-    slug:
-        label: cosmicradiotv.podcast::lang.general.slug
         searchable: true
 
     show_id:
@@ -16,3 +16,16 @@ columns:
         relation: show
         searchable: true
         select: name
+
+    slug:
+        label: cosmicradiotv.podcast::lang.general.slug
+        searchable: true
+
+    published:
+        label: cosmicradiotv.podcast::lang.episode.published
+        type: switch
+
+    release:
+        label: cosmicradiotv.podcast::lang.episode.release
+        type: timesince
+
