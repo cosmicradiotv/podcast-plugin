@@ -1,10 +1,13 @@
-{# 
+<div class="row">
+    <div class="col-md-12">
+        <h2>{{__SELF__.show.name}}</h2>
+        <h3>{{ __SELF__.episode.title }}</h3>
 
-Header area 
 
-#}
-<h3>{{__SELF__.episode.show.name}}</h3>
-<h1>{{ __SELF__.episode.title }}</h1>
+
+
+    </div>
+</div>
 
 {# 
 
@@ -48,7 +51,7 @@ Meta area
 {% endfor %}</p>
 
 <h3>Summary</h3>
-<p>{{ __SELF__.episode.summary }}</p>
+<p>{{ __SELF__.episode.summary|e|nl2br }}</p>
 
 <h3>Show Notes</h3>
 {{ __SELF__.episode.content|raw }}

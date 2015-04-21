@@ -21,7 +21,7 @@ class Episodes extends ComponentBase
     public $show;
 
     /**
-     * @var LengthAwarePaginator Pagintor instance of all of the episodes
+     * @var LengthAwarePaginator|Episode[] Pagintor instance of all of the episodes
      */
     public $episodes;
 
