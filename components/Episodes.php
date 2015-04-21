@@ -105,6 +105,11 @@ class Episodes extends ComponentBase
                                      ->where('published', true)
                                      ->orderBy('release', 'desc')
                                      ->paginate(intval($this->property('perPage')));
+
+        $this->episodes->getCollection()->each(function(Episode $episode) {
+           // Cache URL value to the model
+           $episode->url = $this->getEpisodeURL($episode);
+        });
     }
 
     /**

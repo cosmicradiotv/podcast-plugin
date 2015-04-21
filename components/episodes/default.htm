@@ -29,13 +29,13 @@
                 <li class="media">
                     {% if episode.image %}
                         <div class="media-left col-xs-4">
-                            <a href="#">
+                            <a href="{{ episode.url }}">
                                 <img class="media-object img-responsive" src="{{ episode.image.thumb(356, 356) }}" alt="{{ episode.title }}">
                             </a>
                         </div>
                     {% endif %}
                     <div class="media-body">
-                        <h4 class="media-heading"><a href="{{ __SELF__.episodeUrl(episode) }}">{{ episode.title }}</a></h4>
+                        <h4 class="media-heading"><a href="{{ episode.url }}">{{ episode.title }}</a></h4>
                         {{ episode.summary|e|nl2br }}
                     </div>
                 </li>

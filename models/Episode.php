@@ -84,6 +84,11 @@ class Episode extends Model
     ];
 
     /**
+     * @var string Where the URL for the episode can be cached to
+     */
+    public $url;
+
+    /**
      * Runs before an episode is deleted to remove all the releases that depend on it
      */
     protected function beforeDelete()
