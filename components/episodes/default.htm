@@ -1,0 +1,48 @@
+{# This file is overridable by creating a partial called episodes/default.html under your theme #}
+
+{% set show = __SELF__.show %}
+{% set episodes = __SELF__.episodes %}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>{{ show.name|e }}</h2>
+
+        <div class="row">
+            {% if show.image %}
+            <div class="col-md-4">
+                <img src="{{ show.image.thumb(300, 300) }}" class="img-responsive" />
+            </div>
+            {% endif %}
+            <div class="{% if show.image %}col-md-8{% else %}col-md-12{% endif %}">
+                {{ show.description|e|nl2br }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Episodes</h3>
+
+        <ul class="media-list">
+            {% for episode in episodes %}
+                <li class="media">
+                    {% if episode.image %}
+                        <div class="media-left">
+                            <a href="#">
+                                <img class="media-object" src="{{ episode.image.path }}" alt="{{ episode.title }}">
+                            </a>
+                        </div>
+                    {% endif %}
+                    <div class="media-body">
+                        <h4 class="media-heading"><a href="{{ __SELF__.episodeUrl(episode) }}">{{ episode.title }}</a></h4>
+                        {{ show.summary|e|nl2br }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {{ episodes.render|raw }}
+    </div>
+</div>
+
