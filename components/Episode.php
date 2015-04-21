@@ -53,13 +53,13 @@ class Episode extends ComponentBase
     public function defineProperties()
     {
         return [
-            'showSlug'          => [
+            'showSlug'    => [
                 'title'    => 'Show Slug',
                 'type'     => 'string',
                 'default'  => '{{ :show_slug }}',
                 'required' => true,
             ],
-            'episodeSlug'       => [
+            'episodeSlug' => [
                 'title'    => 'Episode Slug',
                 'type'     => 'string',
                 'default'  => '{{ :episode_slug }}',
@@ -67,7 +67,7 @@ class Episode extends ComponentBase
             ]
         ];
     }
-    
+
     /**
      * Runs when the page or layout loads (sets up properties available to the component partial)
      */
@@ -102,14 +102,15 @@ class Episode extends ComponentBase
                                     ->getQuery()
                                     ->where('published', true)
                                     ->where('slug', $this->property('episodeSlug'))
+                                    ->with(['releases', 'releases.release_type', 'image', 'tags', 'show'])
                                     ->firstOrFail();
         $this->releases = Collection::make($this->episode->releases); // Creates a copy
-        $this->releases->sort(function(Release $a, Release $b) {
+        $this->releases->sort(function (Release $a, Release $b) {
             // Order: Youtube > (rest) > Video > Audio
             $ratings = [
                 'youtube' => 1,
-                'video' => 8,
-                'audio' => 9
+                'video'   => 8,
+                'audio'   => 9
             ];
             $aRating = $ratings[$a->release_type->type] ?: 7;
             $bRating = $ratings[$b->release_type->type] ?: 7;
