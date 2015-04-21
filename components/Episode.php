@@ -108,7 +108,7 @@ class Episode extends ComponentBase
         if ($this->playerReleaseType->type === "youtube") {
             // Gets the embed url from a youtube url.
             // Uses https://gist.github.com/astockwell/11055104
-            $this->playerYoutubeEmbedUrl = VideoURLParser::get_url_embed($this->playerRelease->url);
+            $this->playerYoutubeEmbedUrl = VideoURLParser::get_youtube_embed(VideoURLParser::get_youtube_id($this->playerRelease->url),0);
         }
     }   
 }
