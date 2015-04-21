@@ -67,38 +67,7 @@ class Episode extends ComponentBase
             ]
         ];
     }
-
-    /**
-     * Gives values for Player Release ID options
-     *
-     * @return mixed
-     */
-    public function getPlayerReleaseIdOptions()
-    {
-        $episodeSlug = Request::input('episodeSlug');
-
-        $episode = Models\Episode::where('slug', '=', $episodeSlug)->whereHas('show', function ($q) {
-            $showSlug = Request::input('showSlug');
-            $q->where('slug', '=', $showSlug);
-        })->with('releases')->get()->first();
-
-        if (!empty($episode) && !$episode->relations['releases']->isEmpty()) {
-            return $episode->relations['releases']->lists('url', 'id');
-        }
-
-        return [];
-    }
-
-    /**
-     * Gives values for Release Type options
-     *
-     * @return array
-     */
-    public function getPlayerReleaseTypeOptions()
-    {
-        return ReleaseType::all()->lists('name', 'slug');
-    }
-
+    
     /**
      * Runs when the page or layout loads (sets up properties available to the component partial)
      */
