@@ -1,11 +1,13 @@
 <?php namespace CosmicRadioTV\Podcast\Components;
 
 use Cms\Classes\ComponentBase;
+use CosmicRadioTV\Podcast\Models\Release;
 use CosmicRadioTV\Podcast\Models\Show;
 use CosmicRadioTV\Podcast\Models;
 use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
 use CosmicRadioTV\Podcast\Models\ReleaseType;
 use CosmicRadioTV\Podcast\Classes\VideoUrlParser;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Request;
 
@@ -19,6 +21,11 @@ class Episode extends ComponentBase
 
     public $playerRelease;
     public $playerYoutubeEmbedUrl;
+
+    /**
+     * @var Collection|Release[]
+     */
+    public $releases;
 
     /**
      * @var Show The show being displayed
@@ -130,6 +137,9 @@ class Episode extends ComponentBase
             return $this->controller->run('404');
         }
 
+        $this->addCss('/plugins/cosmicradiotv/podcast/assets/stylesheet/player.css');
+        $this->addJs('/plugins/cosmicradiotv/podcast/assets/javascript/player.js');
+
 
         // Get the release to be used in the player (based on conditions set for the component)
         if (!empty($this->episode)) {
@@ -184,8 +194,19 @@ class Episode extends ComponentBase
                                     ->getQuery()
                                     ->where('published', true)
                                     ->where('slug', $this->property('episodeSlug'))
-                                    ->with(['releases', 'releases.release_type', 'image', 'tags', 'show'])
                                     ->firstOrFail();
+        $this->releases = Collection::make($this->episode->releases); // Creates a copy
+        $this->releases->sort(function(Release $a, Release $b) {
+            // Order: Youtube > (rest) > Video > Audio
+            $ratings = [
+                'youtube' => 1,
+                'video' => 8,
+                'audio' => 9
+            ];
+            $aRating = $ratings[$a->release_type->type] ?: 7;
+            $bRating = $ratings[$b->release_type->type] ?: 7;
 
+            return $aRating - $bRating;
+        });
     }
 }

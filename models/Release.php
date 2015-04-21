@@ -19,9 +19,9 @@ use October\Rain\Database\Traits\Validation;
  * @property      Carbon      $created_at      Show creation time
  * @property      Carbon      $updated_at      Show update time
  * @property-read Episode     $episode         Episode
- * @property-read ReleaseType $type            Release type
- * @method \October\Rain\Database\Relations\BelongsTo episode()
- * @method \October\Rain\Database\Relations\BelongsTo type()
+ * @property-read ReleaseType $release_type    Release type
+ *          @method \October\Rain\Database\Relations\BelongsTo episode()
+ *          @method \October\Rain\Database\Relations\BelongsTo release_type()
  */
 class Release extends Model
 {
@@ -45,8 +45,32 @@ class Release extends Model
      */
 
     public $belongsTo = [
-        'episode' => ['CosmicRadioTV\Podcast\Models\Episode'],
+        'episode'      => ['CosmicRadioTV\Podcast\Models\Episode'],
         'release_type' => ['CosmicRadioTV\Podcast\Models\ReleaseType'],
     ];
+
+    /**
+     * Generates URL from release type that can be used in embed
+     */
+    public function getEmbedUrlAttribute()
+    {
+        switch ($this->release_type->type) {
+            case 'audio':
+            case 'video':
+                return $this->url;
+                break;
+            case 'youtube':
+                // http://stackoverflow.com/a/8260383
+                if (preg_match('/.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/', $this->url, $matches)) {
+                    return 'https://youtube.com/embed/' . $matches[1];
+                } else {
+                    return $this->url;
+                }
+                break;
+            default:
+                return $this->url;
+                break;
+        }
+    }
 
 }

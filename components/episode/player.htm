@@ -1,0 +1,57 @@
+{%if __SELF__.releases.count %}
+<div class="crtv-podcast-player-container"
+     data-crtv-podcast="player"
+     data-crtv-podcast-player-poster="{{ __SELF__.episode.image ? __SELF__.episode.image.path : (__SELF__.show.image ? __SELF__.show.image.path : null) }}">
+
+    <div class="crtv-embed-responsive" data-crtv-podcast-player>
+        {% if __SELF__.releases.first.release_type.type == 'audio' %}
+
+            <div class="crtv-embed-audio" style="background-image: url('{{ __SELF__.episode.image ? __SELF__.episode.image.path : (__SELF__.show.image ? __SELF__.show.image.path : null) }}');">
+                <audio src="{{ __SELF__.releases.first.embed_url }}" controls></audio>
+            </div>
+
+        {% elseif __SELF__.releases.first.release_type.type == 'video' %}
+
+            <video src="{{ __SELF__.releases.first.embed_url }}"
+                   controls
+                   poster="{{ __SELF__.episode.image ? __SELF__.episode.image.path : (__SELF__.show.image ? __SELF__.show.image.path : null) }}">
+            </video>
+
+        {% else %}
+
+            <iframe src="{{ __SELF__.releases.first.embed_url }}" frameborder="0"></iframe>
+
+        {% endif %}
+    </div>
+
+    <ul class="crtv-podcast-releases">
+
+        {% for release in __SELF__.releases %}
+
+            <li class="crtv-podcast-release {%if loop.index == 1 %}active{% endif %}">
+                <a class="crtv-podcast-release-switch"
+                   href="{{ release.url }}"
+                   title="Switch To"
+                   data-crtv-podcast-player-item="{{ release.embed_url }}"
+                   data-crtv-podcast-player-type="{{ release.release_type.type }}">
+                    {{ release.release_type.name }}
+                </a>
+                {% if release.release_type.type in ['audio', 'video'] %}
+                    <a href="{{ release.url }}" title="Download" class="crtv-podcast-release-link">
+                        <i class="icon-download-alt"></i>
+                    </a>
+                {% else %}
+                    <a href="{{ release.url }}" title="Go to" class="crtv-podcast-release-link">
+                        <i class="icon-external-link"></i>
+                    </a>
+                {% endif %}
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+</div>
+{% else %}
+
+{% endif %}
