@@ -1,17 +1,54 @@
-<h1>{{ __SELF__.episode.title }}</h1>
-<p>Show: {{__SELF__.show.name}}</p>
+{# 
 
-{% if __SELF__.playerReleaseType.type == 'video' %}
-<video src="{{ __SELF__.playerRelease.url }}" width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" controls></video>
-{% elseif __SELF__.playerReleaseType.type == 'audio' %}
+Header area 
+
+#}
+<h3>{{__SELF__.episode.show.name}}</h3>
+<h1>{{ __SELF__.episode.title }}</h1>
+
+{# 
+
+Video Player 
+
+#}
+{% if __SELF__.playerRelease.release_type.type == 'video' %}
+<video src="{{ __SELF__.playerRelease.url }}"
+{# Load the image if the episode has one. #}
+{% if __SELF__.episode.image.getPath() is not empty %}poster="{{ __SELF__.episode.image.getPath() }}"{% endif %} 
+width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" controls></video>
+
+{# 
+
+Audio Player 
+
+#}
+{% elseif __SELF__.playerRelease.release_type.type == 'audio' %}
+{# Load the image if the episode has one. #}
+{% if __SELF__.episode.image.getPath() is not empty %}
+<p><img src="{{ __SELF__.episode.image.getPath() }}" width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" /></p>
+{% endif %}
 <audio src="{{ __SELF__.playerRelease.url }}" width="{{ __SELF__.property('playerWidth') }}" controls></audio>
-{% elseif __SELF__.playerReleaseType.type == 'youtube' %}
+
+{# 
+
+Youtube Player 
+
+#}
+{% elseif __SELF__.playerRelease.release_type.type == 'youtube' %}
 <iframe width="{{ __SELF__.property('playerWidth') }}" height="{{ __SELF__.property('playerHeight') }}" src="{{ __SELF__.playerYoutubeEmbedUrl }}" frameborder="0" allowfullscreen></iframe>
 {% endif %}
+{# 
 
-<h2>Direct Release Links</h2>
-<ul>
-{% for release in __SELF__.releases %}
-<li><a href="{{ release.url }}">{{ release.relations['release_type'].name }}</a></li>
-{% endfor %}
-</ul>
+Meta area 
+
+#}
+<p>Released: {{ __SELF__.episode.release|date("M d, Y")}} | Duration: {{ __SELF__.episode.length|sectotime }}
+{% for release in __SELF__.episode.releases %}
+ | <a href="{{ release.url }}">{{ release.release_type.name }}</a></li>
+{% endfor %}</p>
+
+<h3>Summary</h3>
+<p>{{ __SELF__.episode.summary }}</p>
+
+<h3>Show Notes</h3>
+{{ __SELF__.episode.content|raw }}

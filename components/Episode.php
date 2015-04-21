@@ -10,12 +10,8 @@ use CosmicRadioTV\Podcast\Classes\VideoUrlParser;
 class Episode extends ComponentBase
 {
     public $episode;
-    public $show;
-    public $tags;
-    public $releases;
 
     public $playerRelease;
-    public $playerReleaseType;
     public $playerYoutubeEmbedUrl;
 
     public function componentDetails()
@@ -93,35 +89,46 @@ class Episode extends ComponentBase
     public function onRun()
     {
         $episodeSlug = trim($this->property('episodeSlug'));
-        $this->episode = Models\Episode::where('slug', '=', $episodeSlug)->whereHas('show', function($q) {
+        $this->episode = $this->page['episode'] = Models\Episode::where('slug', '=', $episodeSlug)->whereHas('show', function($q) {
             $showSlug = trim($this->property('showSlug'));
             $q->where('slug','=',$showSlug);
         })->with(['releases'=>function($q){
             $q->with('release_type');
         },'image','tags','show'])->get()->first();
 
+        // Get the release to be used in the player (based on conditions set for the component)
         if (!empty($this->episode)) {
-            $this->show = $this->episode->relations['show'];
-            $this->tags = $this->episode->relations['tags'];
-            $this->releases = $this->episode->relations['releases'];
 
+            // If we have the release id, just use it, skip everything else.
             if (trim($this->property('playerReleaseId')) !== '') {
-                $this->playerRelease = $this->releases->find(trim($this->property('playerReleaseId')));
-            } else if (trim($this->property('playerReleaseType')) !== '') {
+
+                $this->playerRelease = $this->episode->releases->find(trim($this->property('playerReleaseId')));
+
+            } 
+
+            // If we have the release type, get the first release of that type.
+            else if (trim($this->property('playerReleaseType')) !== '') 
+            {
+
                 // Doing foreach instead of $this->releases->filter so I can break after I find one
-                foreach($this->releases as $release) {
+                foreach($this->episode->releases as $release) {
+
                     if($release->relations['release_type']->slug === trim($this->property('playerReleaseType'))) {
                         $this->playerRelease = $release;
                         break;
                     }
+
                 }
-            } else {
+            } 
+
+            // Otherwise choose the first release
+            else 
+            {
                 $this->playerRelease = $this->releases->first();
             }
 
-            $this->playerReleaseType = $this->playerRelease->relations['release_type'];
-
-            if ($this->playerReleaseType->type === "youtube") {
+            // If it's a youtube player set the youtube embed url
+            if ($this->playerRelease->release_type->type === "youtube") {
                 // Gets the embed url from a youtube url.
                 // Uses https://gist.github.com/astockwell/11055104
                 $this->playerYoutubeEmbedUrl = VideoURLParser::get_youtube_embed(VideoURLParser::get_youtube_id($this->playerRelease->url),0);

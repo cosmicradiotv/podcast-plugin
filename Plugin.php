@@ -33,6 +33,15 @@ class Plugin extends PluginBase
         ];
     }
 
+    public function registerMarkupTags()
+    {
+        return [
+            'filters' => [
+                'sectotime' => ['CosmicRadioTV\Podcast\Classes\TwigUtils','sectotime']
+            ]
+        ];
+    }
+
     /**
      * Called right before the request route.
      */
