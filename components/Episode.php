@@ -29,6 +29,12 @@ class Episode extends ComponentBase
     public function defineProperties()
     {
         return [
+            'showSlug' => [
+                'title' =>          'Show Slug',
+                'type' =>           'string',
+                'default' =>        '',
+                'required' =>       true,
+            ],
             'episodeSlug' => [
                 'title' =>          'Episode Slug',
                 'type' =>           'string',
@@ -65,8 +71,11 @@ class Episode extends ComponentBase
     public function getPlayerReleaseIdOptions()
     {
         $episodeSlug = Request::input('episodeSlug');
-
-        $episode = Models\Episode::where('slug', '=', $episodeSlug)->with('releases')->get()->first();
+        
+        $episode = Models\Episode::where('slug', '=', $episodeSlug)->whereHas('show', function($q) {
+            $showSlug = Request::input('showSlug');
+            $q->where('slug','=',$showSlug);
+        })->with('releases')->get()->first();
         
         if (!empty($episode) && !$episode->relations['releases']->isEmpty()) {
             return $episode->relations['releases']->lists('url','id');
@@ -84,32 +93,39 @@ class Episode extends ComponentBase
     public function onRun()
     {
         $episodeSlug = trim($this->property('episodeSlug'));
-        $this->episode = Models\Episode::where('slug', '=', $episodeSlug)->with(['releases'=>function($q){$q->with('release_type');},'image','tags','show'])->get()->first();
+        $this->episode = Models\Episode::where('slug', '=', $episodeSlug)->whereHas('show', function($q) {
+            $showSlug = trim($this->property('showSlug'));
+            $q->where('slug','=',$showSlug);
+        })->with(['releases'=>function($q){
+            $q->with('release_type');
+        },'image','tags','show'])->get()->first();
 
-        $this->show = $this->episode->relations['show']->first();
-        $this->tags = $this->episode->relations['tags'];
-        $this->releases = $this->episode->relations['releases'];
+        if (!empty($this->episode)) {
+            $this->show = $this->episode->relations['show'];
+            $this->tags = $this->episode->relations['tags'];
+            $this->releases = $this->episode->relations['releases'];
 
-        if (trim($this->property('playerReleaseId')) !== '') {
-            $this->playerRelease = $this->releases->find(trim($this->property('playerReleaseId')));
-        } else if (trim($this->property('playerReleaseType')) !== '') {
-            // Doing foreach instead of $this->releases->filter so I can break after I find one
-            foreach($this->releases as $release) {
-                if($release->relations['release_type']->slug === trim($this->property('playerReleaseType'))) {
-                    $this->playerRelease = $release;
-                    break;
+            if (trim($this->property('playerReleaseId')) !== '') {
+                $this->playerRelease = $this->releases->find(trim($this->property('playerReleaseId')));
+            } else if (trim($this->property('playerReleaseType')) !== '') {
+                // Doing foreach instead of $this->releases->filter so I can break after I find one
+                foreach($this->releases as $release) {
+                    if($release->relations['release_type']->slug === trim($this->property('playerReleaseType'))) {
+                        $this->playerRelease = $release;
+                        break;
+                    }
                 }
+            } else {
+                $this->playerRelease = $this->releases->first();
             }
-        } else {
-            $this->playerRelease = $this->releases->first();
-        }
 
-        $this->playerReleaseType = $this->playerRelease->relations['release_type'];
+            $this->playerReleaseType = $this->playerRelease->relations['release_type'];
 
-        if ($this->playerReleaseType->type === "youtube") {
-            // Gets the embed url from a youtube url.
-            // Uses https://gist.github.com/astockwell/11055104
-            $this->playerYoutubeEmbedUrl = VideoURLParser::get_youtube_embed(VideoURLParser::get_youtube_id($this->playerRelease->url),0);
+            if ($this->playerReleaseType->type === "youtube") {
+                // Gets the embed url from a youtube url.
+                // Uses https://gist.github.com/astockwell/11055104
+                $this->playerYoutubeEmbedUrl = VideoURLParser::get_youtube_embed(VideoURLParser::get_youtube_id($this->playerRelease->url),0);
+            }
         }
     }   
 }
