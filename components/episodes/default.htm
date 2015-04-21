@@ -10,7 +10,7 @@
         <div class="row">
             {% if show.image %}
             <div class="col-md-4">
-                <img src="{{ show.image.thumb(300, 300) }}" class="img-responsive" />
+                <img src="{{ show.image.thumb(400, 400) }}" class="img-responsive" />
             </div>
             {% endif %}
             <div class="{% if show.image %}col-md-8{% else %}col-md-12{% endif %}">
@@ -28,15 +28,15 @@
             {% for episode in episodes %}
                 <li class="media">
                     {% if episode.image %}
-                        <div class="media-left">
+                        <div class="media-left col-xs-4">
                             <a href="#">
-                                <img class="media-object" src="{{ episode.image.path }}" alt="{{ episode.title }}">
+                                <img class="media-object img-responsive" src="{{ episode.image.thumb(356, 356) }}" alt="{{ episode.title }}">
                             </a>
                         </div>
                     {% endif %}
                     <div class="media-body">
                         <h4 class="media-heading"><a href="{{ __SELF__.episodeUrl(episode) }}">{{ episode.title }}</a></h4>
-                        {{ show.summary|e|nl2br }}
+                        {{ episode.summary|e|nl2br }}
                     </div>
                 </li>
             {% endfor %}
