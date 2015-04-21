@@ -6,6 +6,8 @@
  * Parses URLs from major cloud video providers. Capable of returning
  * keys from various video embed and link urls to manipulate and
  * access videos in various ways.
+ *  
+ * From https://gist.github.com/astockwell/11055104
  */
 class VideoUrlParser
 {
@@ -80,7 +82,7 @@ class VideoUrlParser
 
 		// Try to get ID from url parameters
 		$key_from_params = self::parse_url_for_params($url, $youtube_url_keys);
-		if ($key_from_params) return $key_from_params;
+		if (!empty($key_from_params)) return $key_from_params;
 
 		// Try to get ID from last portion of url
 		return self::parse_url_for_last_element($url);
@@ -157,12 +159,10 @@ class VideoUrlParser
 		$url_parts = explode("/", $url);
 		$prospect = end($url_parts);
 		$prospect_and_params = preg_split("/(\?|\=|\&)/", $prospect);
-		if ($prospect_and_params) {
+		if (!empty($prospect_and_params)) {
 			return $prospect_and_params[0];
 		} else {
 			return $prospect;
 		}
-		return $url;
 	}
 }
- ?>
