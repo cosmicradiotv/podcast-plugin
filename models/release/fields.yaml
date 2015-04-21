@@ -14,5 +14,5 @@ fields:
 
     size:
         label: cosmicradiotv.podcast::lang.release.size
-        default: 0
+        placeholder: 0
         type: number

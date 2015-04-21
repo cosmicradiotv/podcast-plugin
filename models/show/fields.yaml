@@ -23,8 +23,49 @@ fields:
             data-input-preset-type: slug
             data-input-preset-closest-parent: form
 
-
     description:
         label: cosmicradiotv.podcast::lang.show.description
         commentAbove: cosmicradiotv.podcast::lang.show.description_comment
         type: textarea
+
+tabs:
+    stretch: true
+    fields:
+        feed_language:
+            tab: cosmicradiotv.podcast::lang.show.tab_rss
+            label: cosmicradiotv.podcast::lang.show.feed_language
+            span: left
+            comment: cosmicradiotv.podcast::lang.show.feed_language_comment
+
+        feed_copyright:
+            tab: cosmicradiotv.podcast::lang.show.tab_rss
+            label: cosmicradiotv.podcast::lang.show.feed_copyright
+            span: right
+
+        feed_author:
+            tab: cosmicradiotv.podcast::lang.show.tab_rss
+            label: cosmicradiotv.podcast::lang.show.feed_author
+
+        itunes_category:
+            tab: cosmicradiotv.podcast::lang.show.tab_itunes
+            label: cosmicradiotv.podcast::lang.show.itunes_category
+            span: left
+            type: textarea
+            comment: cosmicradiotv.podcast::lang.show.itunes_category_comment
+            placeholder: cosmicradiotv.podcast::lang.show.itunes_category_placeholder
+
+        itunes_explicit:
+            tab: cosmicradiotv.podcast::lang.show.tab_itunes
+            label: cosmicradiotv.podcast::lang.show.itunes_explicit
+            type: switch
+            span: right
+
+        itunes_owner_name:
+            tab: cosmicradiotv.podcast::lang.show.tab_itunes
+            label: cosmicradiotv.podcast::lang.show.itunes_owner_name
+            span: left
+
+        itunes_owner_email:
+            tab: cosmicradiotv.podcast::lang.show.tab_itunes
+            label: cosmicradiotv.podcast::lang.show.itunes_owner_email
+            span: right

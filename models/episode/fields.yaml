@@ -39,6 +39,14 @@ fields:
         span: left
         type: switch
 
+    image:
+        tab: cosmicradiotv.podcast::lang.episode.tab_media
+        label: cosmicradiotv.podcast::lang.episode.image
+        span: right
+        type: fileupload
+        mode: image
+
+
 tabs:
     stretch: true
     fields:
@@ -64,12 +72,6 @@ tabs:
             default: 0
             commentAbove: (in seconds)
 
-        image:
-            tab: cosmicradiotv.podcast::lang.episode.tab_media
-            label: cosmicradiotv.podcast::lang.episode.image
-            type: fileupload
-            mode: image
-
         tags:
             tab: cosmicradiotv.podcast::lang.episode.tab_tags
             type: partial
@@ -80,6 +82,9 @@ tabs:
             type: partial
             path: @/plugins/cosmicradiotv/podcast/controllers/episodes/_form_releases.htm
 
-
+        itunes_explicit:
+            tab: cosmicradiotv.podcast::lang.episode.tab_itunes
+            label: cosmicradiotv.podcast::lang.episode.itunes_explicit
+            type: switch
 
 

@@ -15,21 +15,21 @@ use CosmicRadioTV\Podcast\Models\Release;
  * Episode
  *
  * @package CosmicRadioTV\Podcast\Models
- * @property      int              $id         ID
- * @property      int              $show_id    Show's ID
- * @property      string           $title      Episode's title
- * @property      string           $slug       URL slug
- * @property      string           $summary    Episode description
- * @property      string           $content    Episode's Show notes
- * @property      int              $length     Episode's length in seconds
- * @property      Carbon           $release    Episode's release time
- * @property      bool             $published  Published state
- * @property      Carbon           $created_at Show creation time
- * @property      Carbon           $updated_at Show update time
- * @property-read Show             $show       The show of this episode
- * @property-read Collection|Tag[] $tags       Tags for this episode
- * @property-read Release          $releases   Releases for this episode
- * @property      File             $image      Shows image
+ * @property      int                  $id         ID
+ * @property      int                  $show_id    Show's ID
+ * @property      string               $title      Episode's title
+ * @property      string               $slug       URL slug
+ * @property      string               $summary    Episode description
+ * @property      string               $content    Episode's Show notes
+ * @property      int                  $length     Episode's length in seconds
+ * @property      Carbon               $release    Episode's release time
+ * @property      bool                 $published  Published state
+ * @property      Carbon               $created_at Show creation time
+ * @property      Carbon               $updated_at Show update time
+ * @property-read Show                 $show       The show of this episode
+ * @property-read Collection|Tag[]     $tags       Tags for this episode
+ * @property-read Collection|Release[] $releases   Releases for this episode
+ * @property      File                 $image      Shows image
  * @method \October\Rain\Database\Relations\BelongsTo show()
  * @method \October\Rain\Database\Relations\BelongsToMany tags()
  * @method \October\Rain\Database\Relations\HasMany releases()
@@ -76,7 +76,7 @@ class Episode extends Model
 
     // Needed this to properly display releases in the create/update episode form
     public $hasMany = [
-        'releases' =>  ['CosmicRadioTV\Podcast\Models\Release'],
+        'releases' => ['CosmicRadioTV\Podcast\Models\Release'],
     ];
 
     public $attachOne = [
@@ -125,8 +125,10 @@ class Episode extends Model
 
     /**
      * Modified unique slug finder to take into account the show_id
-     * @param string $name The database column name.
+     *
+     * @param string $name  The database column name.
      * @param string $value The desired column value.
+     *
      * @return string A safe value that is unique.
      */
     protected function getSluggableUniqueAttributeValue($name, $value)
@@ -135,7 +137,7 @@ class Episode extends Model
         $separator = $this->getSluggableSeparator();
 
         // Remove any existing suffixes
-        $_value = preg_replace('/'.preg_quote($separator).'[0-9]+$/', '', trim($value));
+        $_value = preg_replace('/' . preg_quote($separator) . '[0-9]+$/', '', trim($value));
 
         while ($this->newQuery()->where('show_id', $this->show_id)->where($name, $_value)->count() > 0) {
             $counter++;
@@ -144,7 +146,6 @@ class Episode extends Model
 
         return $_value;
     }
-
 
 
 }

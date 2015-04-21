@@ -67,7 +67,7 @@ class Episodes extends ComponentBase
                 'type'        => 'dropdown',
                 'default'     => 'podcast/episode',
                 'required'    => true,
-                'group'       => trans('cosmicradiotv.podcast::components.episodes.properties.episode_page.group'),
+                'group'       => trans('cosmicradiotv.podcast::components.episodes.groups.links'),
             ]
         ];
     }

@@ -9,3 +9,7 @@
 1.0.3:
   - Fix ability to add releases to new shows
   - add_nullable_to_release_episode.php
+1.0.4:
+  - Add some RSS feed specific fields
+  - allow_null_release_size.php
+  - add_standard_rss_fields.php

@@ -35,8 +35,9 @@ class Plugin extends PluginBase
     public function registerComponents()
     {
         return [
-            'CosmicRadioTV\Podcast\Components\Episode'  => 'episode',
-            'CosmicRadioTV\Podcast\Components\Episodes' => 'episodes',
+            'CosmicRadioTV\Podcast\Components\Episode'       => 'episode',
+            'CosmicRadioTV\Podcast\Components\Episodes'      => 'episodes',
+            'CosmicRadioTV\Podcast\Components\FeedComponent' => 'feed',
         ];
     }
 
@@ -44,7 +45,7 @@ class Plugin extends PluginBase
     {
         return [
             'filters' => [
-                'sectotime' => ['CosmicRadioTV\Podcast\Classes\TwigUtils','sectotime']
+                'sectotime' => ['CosmicRadioTV\Podcast\Classes\TwigUtils', 'sectotime']
             ]
         ];
     }
