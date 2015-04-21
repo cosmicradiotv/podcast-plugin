@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Response;
+use October\Rain\Database\Model;
 use SimpleXMLElement;
 use System\Classes\PluginManager;
 
@@ -212,79 +213,8 @@ class FeedComponent extends ComponentBase
         $root['version'] = '2.0';
         $root['xmlns:itunes'] = 'http://www.itunes.com/dtds/podcast-1.0.dtd';
 
-        $channel = $root->addChild('channel');
-        foreach ($this->feed_channel_fields as $source => $target) {
-            if ($this->show->{$source}) {
-                foreach ((array) $target as $field) {
-                    $channel->{$field} = $this->show->{$source};
-                }
-            }
-        }
-        $channel->link = $this->controller->pageUrl($this->property('showPage'), ['show_slug' => $this->show->slug]);
-        $channel->generator = 'CosmicRadioTV/podcast-plugin';
-        $channel->docs = 'http://blogs.law.harvard.edu/tech/rss';
-        if ($this->show->image) {
-            $channel->image->url = asset($this->show->image->getPath());
-            $channel->image->title = $this->show->name;
-            $channel->image->link = $channel->link;
-            $channel->{'itunes:image'}['href'] = asset($this->show->image->getPath());
-        }
-        // iTunes categories
-        if($this->show->itunes_category) {
-            $categories = explode("\r\n", $this->show->itunes_category);
-            /** @var SimpleXMLElement $previous */
-            $previous = null;
-            foreach ($categories as $category) {
-                if (substr($category, 0, 1) == ' ' && isset($previous)) {
-                    $element = $previous->addChild('xmlns:itunes:category');
-                    $text = substr($category, 1);
-                } else {
-                    $previous = $element = $channel->addChild('xmlns:itunes:category');
-                    $text = $category;
-                }
-                $element['text'] = $text;
-            }
-        }
-        if($this->show->itunes_explicit) {
-            $channel->{'itunes:explicit'} = 'yes';
-        }
-        if($this->show->itunes_owner_name) {
-            $channel->{'itunes:owner'}->{'itunes:name'} = $this->show->itunes_owner_name;
-        }
-        if($this->show->itunes_owner_email) {
-            $channel->{'itunes:owner'}->{'itunes:email'} = $this->show->itunes_owner_email;
-        }
-
-        foreach ($this->episodes as $episode) {
-            $episodeNode = $channel->addChild('item');
-
-            foreach ($this->feed_episode_fields as $source => $target) {
-                if ($episode->{$source}) {
-                    foreach ((array) $target as $field) {
-                        $episodeNode->{$field} = $episode->{$source};
-                    }
-                }
-            }
-            $episodeNode->link = $this->controller->pageUrl($this->property('episodePage'),
-                ['show_slug' => $this->show->slug, 'episode_slug' => $episode->slug]);
-            $episodeNode->guid = $episodeNode->link;
-            $episodeNode->pubDate = $episode->release->toRfc2822String();
-            if($episode->itunes_explicit) {
-                $episodeNode->{'itunes:explicit'} = 'yes';
-            }
-
-            /** @var Release $release */
-            $release = $episode->releases->first(); // Filtered to be the one in eager loader
-            if (in_array($this->releaseType->type, ['audio', 'video'])) {
-                $episodeNode->enclosure['url'] = $release->url;
-                $episodeNode->enclosure['length'] = $release->size;
-                $episodeNode->enclosure['type'] = $this->releaseType->filetype;
-            } else {
-                $episodeNode->comments = $episodeNode->link;
-                $episodeNode->link = $release->url;
-            }
-        }
-
+        $channel = $this->addChannelToFeed($root);
+        $this->addEpisodesToChannel($channel);
 
         return $root;
     }
@@ -299,6 +229,105 @@ class FeedComponent extends ComponentBase
         // Debugbar - Injects extra crap into xml
         if ($pluginManager->exists('bedard.debugbar')) {
             app('config')->set('debugbar.enabled', false);
+        }
+    }
+
+    /**
+     * Adds channel to the feed
+     *
+     * @param SimpleXMLElement $root
+     *
+     * @return SimpleXMLElement
+     */
+    protected function addChannelToFeed(SimpleXMLElement $root)
+    {
+        $channel = $root->addChild('channel');
+        $this->addFields($channel, $this->feed_channel_fields, $this->show);
+
+        $channel->link = $this->controller->pageUrl($this->property('showPage'), ['show_slug' => $this->show->slug]);
+        $channel->generator = 'CosmicRadioTV/podcast-plugin';
+        $channel->docs = 'http://blogs.law.harvard.edu/tech/rss';
+        if ($this->show->image) {
+            $channel->image->url = asset($this->show->image->getPath());
+            $channel->image->title = $this->show->name;
+            $channel->image->link = $channel->link;
+            $channel->{'itunes:image'}['href'] = asset($this->show->image->getPath());
+        }
+        // iTunes categories
+        if ($this->show->itunes_category) {
+            $categories = explode("\r\n", $this->show->itunes_category);
+            /** @var SimpleXMLElement $previous */
+            $previous = null;
+            foreach ($categories as $category) {
+                if (substr($category, 0, 1) == ' ' && isset($previous)) {
+                    $element = $previous->addChild('xmlns:itunes:category');
+                    $text = substr($category, 1);
+                } else {
+                    $previous = $element = $channel->addChild('xmlns:itunes:category');
+                    $text = $category;
+                }
+                $element['text'] = $text;
+            }
+        }
+        if ($this->show->itunes_explicit) {
+            $channel->{'itunes:explicit'} = 'yes';
+        }
+        if ($this->show->itunes_owner_name) {
+            $channel->{'itunes:owner'}->{'itunes:name'} = $this->show->itunes_owner_name;
+        }
+        if ($this->show->itunes_owner_email) {
+            $channel->{'itunes:owner'}->{'itunes:email'} = $this->show->itunes_owner_email;
+        }
+
+        return $channel;
+    }
+
+    /**
+     * @param SimpleXMLElement $channel
+     */
+    protected function addEpisodesToChannel(SimpleXMLElement $channel)
+    {
+        foreach ($this->episodes as $episode) {
+            $episodeNode = $channel->addChild('item');
+
+            $this->addFields($episodeNode, $this->feed_episode_fields, $episode);
+
+            $episodeNode->link = $this->controller->pageUrl($this->property('episodePage'),
+                ['show_slug' => $this->show->slug, 'episode_slug' => $episode->slug]);
+            $episodeNode->guid = $episodeNode->link;
+            $episodeNode->pubDate = $episode->release->toRfc2822String();
+            if ($episode->itunes_explicit) {
+                $episodeNode->{'itunes:explicit'} = 'yes';
+            }
+
+            /** @var Release $release */
+            $release = $episode->releases->first(); // Filtered to be the one in eager loader
+            if (in_array($this->releaseType->type, ['audio', 'video'])) {
+                $episodeNode->enclosure['url'] = $release->url;
+                $episodeNode->enclosure['length'] = $release->size;
+                $episodeNode->enclosure['type'] = $this->releaseType->filetype;
+            } else {
+                $episodeNode->comments = $episodeNode->link;
+                $episodeNode->link = $release->url;
+            }
+        }
+    }
+
+    /**
+     * Attaches fields from model to XML element
+     *
+     * @param SimpleXMLElement $channel
+     * @param array            $fields
+     * @param Model            $souceModel
+     */
+    protected function addFields(SimpleXMLElement $channel, $fields, Model $souceModel)
+    {
+        foreach ($fields as $source => $target) {
+            if ($souceModel->{$source}) {
+                foreach ((array) $target as $field) {
+                    $channel->{$field} = $souceModel->{$source};
+                }
+            }
         }
     }
 
