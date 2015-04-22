@@ -2,7 +2,7 @@
 
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
-use CosmicRadioTV\Podcast\Models\Episode;
+use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
 use CosmicRadioTV\Podcast\Models\Show;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -106,7 +106,7 @@ class Episodes extends ComponentBase
                                      ->orderBy('release', 'desc')
                                      ->paginate(intval($this->property('perPage')));
 
-        $this->episodes->getCollection()->each(function(Episode $episode) {
+        $this->episodes->getCollection()->each(function(EpisodeModel $episode) {
            // Cache URL value to the model
            $episode->url = $this->getEpisodeURL($episode);
         });
@@ -129,7 +129,7 @@ class Episodes extends ComponentBase
      *
      * @return string
      */
-    public function getEpisodeURL(Episode $episode)
+    public function getEpisodeURL(EpisodeModel $episode)
     {
         return $this->controller->pageUrl($this->property('episodePage'),
             ['show_slug' => $this->show->slug, 'episode_slug' => $episode->slug]);

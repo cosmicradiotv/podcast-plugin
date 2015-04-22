@@ -5,7 +5,7 @@ namespace CosmicRadioTV\Podcast\components;
 
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
-use CosmicRadioTV\Podcast\Models\Episode;
+use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
 use CosmicRadioTV\Podcast\Models\Release;
 use CosmicRadioTV\Podcast\Models\ReleaseType;
 use CosmicRadioTV\Podcast\Models\Show;
@@ -195,7 +195,7 @@ class FeedComponent extends ComponentBase
                                      ->take(intval($this->property('itemLimit')))
                                      ->get();
 
-        $this->episodes->map(function (Episode $episode) use ($show) {
+        $this->episodes->map(function (EpisodeModel $episode) use ($show) {
             $episode->setRelation('show', $show);
         });
 
