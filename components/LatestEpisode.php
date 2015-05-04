@@ -12,26 +12,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Request;
 
-class LatestEpisode extends ComponentBase
+class LatestEpisode extends Episode
 {
-
-    use TitlePlaceholdersTrait;
-
-    /**
-     * @var EpisodeModel The show being displayed
-     */
-    public $episode;
-
-    /**
-     * @var Collection|Release[]
-     */
-    public $releases;
-
-    /**
-     * @var Show The show being displayed
-     */
-    public $show;
-
     /**
      * Component Details
      *
@@ -67,30 +49,6 @@ class LatestEpisode extends ComponentBase
                 'type'        => 'checkbox',
             ],
         ];
-    }
-
-    /**
-     * Runs when the page or layout loads (sets up properties available to the component partial)
-     */
-    public function onRun()
-    {
-        try {
-            $this->setState();
-        } catch (ModelNotFoundException $e) {
-            // Show/Episode not found, return 404
-            $this->controller->setStatusCode(404);
-
-            return $this->controller->run('404');
-        }
-
-        if ($this->property('updateTitle')) {
-            $this->updateTitle();
-        }
-
-        $this->addCss('/plugins/cosmicradiotv/podcast/assets/stylesheet/player.css');
-        $this->addJs('/plugins/cosmicradiotv/podcast/assets/javascript/player.js');
-
-        return null;
     }
 
     /**
@@ -133,19 +91,5 @@ class LatestEpisode extends ComponentBase
 
             return $aRating - $bRating;
         });
-    }
-
-    /**
-     * Update page's title using placeholders
-     */
-    protected function updateTitle()
-    {
-        $raw = $this->page->title;
-        $paths = (object) [
-            'show'    => $this->show,
-            'episode' => $this->episode,
-        ];
-
-        $this->page->title = $this->replacePlaceholders($raw, $paths);
     }
 }
