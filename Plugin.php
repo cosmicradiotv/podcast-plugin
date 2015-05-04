@@ -36,6 +36,7 @@ class Plugin extends PluginBase
     {
         return [
             'CosmicRadioTV\Podcast\Components\Episode'       => 'episode',
+            'CosmicRadioTV\Podcast\Components\LatestEpisode' => 'latest_episode',
             'CosmicRadioTV\Podcast\Components\Episodes'      => 'episodes',
             'CosmicRadioTV\Podcast\Components\FeedComponent' => 'feed',
         ];

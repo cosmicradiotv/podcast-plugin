@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Request;
 
-class Episode extends ComponentBase
+class LatestEpisode extends ComponentBase
 {
 
     use TitlePlaceholdersTrait;
@@ -40,8 +40,8 @@ class Episode extends ComponentBase
     public function componentDetails()
     {
         return [
-            'name'        => 'cosmicradiotv.podcast::components.episode.name',
-            'description' => 'cosmicradiotv.podcast::components.episode.description'
+            'name'        => 'cosmicradiotv.podcast::components.latest_episode.name',
+            'description' => 'cosmicradiotv.podcast::components.latest_episode.description'
         ];
     }
 
@@ -53,19 +53,12 @@ class Episode extends ComponentBase
     public function defineProperties()
     {
         return [
-            'showSlug'    => [
-                'title'       => 'cosmicradiotv.podcast::components.common.properties.show_slug.title',
-                'description' => 'cosmicradiotv.podcast::components.common.properties.show_slug.description',
+            'showSlugFilter'    => [
+                'title'       => 'cosmicradiotv.podcast::components.latest_episode.properties.show_slug_filter.title',
+                'description' => 'cosmicradiotv.podcast::components.latest_episode.properties.show_slug_filter.description',
                 'default'     => '{{ :show_slug }}',
                 'type'        => 'string',
-                'required'    => true,
-            ],
-            'episodeSlug' => [
-                'title'       => 'cosmicradiotv.podcast::components.common.properties.episode_slug.title',
-                'description' => 'cosmicradiotv.podcast::components.common.properties.episode_slug.description',
-                'default'     => '{{ :show_slug }}',
-                'type'        => 'string',
-                'required'    => true,
+                'required'    => false,
             ],
             'updateTitle' => [
                 'title'       => 'cosmicradiotv.podcast::components.common.properties.update_title.title',
@@ -107,15 +100,26 @@ class Episode extends ComponentBase
      */
     public function setState()
     {
-        $this->show = Show::query()
-                          ->where('slug', $this->property('showSlug'))
-                          ->firstOrFail();
-        $this->episode = $this->show->episodes()
-                                    ->getQuery()
-                                    ->where('published', true)
-                                    ->where('slug', $this->property('episodeSlug'))
-                                    ->with(['releases', 'releases.release_type', 'image', 'tags', 'show'])
-                                    ->firstOrFail();
+        if (!empty($this->property('showSlugFilter'))) {
+            $this->show = Show::query()
+                  ->where('slug', $this->property('showSlugFilter'))
+                  ->firstOrFail();
+
+            $this->episode = $this->show->episodes()
+                    ->getQuery()
+                    ->where('published', true)
+                    ->orderBy('release', 'desc')
+                    ->with(['releases', 'releases.release_type', 'image', 'tags', 'show'])
+                    ->firstOrFail();
+        } else {
+            $this->episode = EpisodeModel::query()
+                    ->where('published', true)
+                    ->orderBy('release', 'desc')
+                    ->with(['releases', 'releases.release_type', 'image', 'tags', 'show'])
+                    ->firstOrFail();
+        }
+
+
         $this->releases = Collection::make($this->episode->releases); // Creates a copy
         $this->releases->sort(function (Release $a, Release $b) {
             // Order: Youtube > (rest) > Video > Audio

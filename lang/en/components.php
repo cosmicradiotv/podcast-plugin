@@ -16,6 +16,20 @@ return [
             ],
         ],
     ],
+    'episode' => [
+        'name'          => 'Episode Component',
+        'description'   => 'Used to display an Episode'
+    ],
+    'latest_episode' => [
+        'name'          => 'Latest Episode Component',
+        'description'   => 'Used to display the latest Episode',
+        'properties'    => [
+            'show_slug_filter' => [
+                'title'         => "Show slug filter (optional)",
+                'description'   => 'Specifies which show to pull the latest episode from (all if left blank)',
+            ]
+        ]
+    ],
     'episodes' => [
         'name'        => 'Episodes',
         'description' => 'Lists all of the episodes of a show',
