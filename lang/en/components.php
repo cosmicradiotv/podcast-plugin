@@ -1,13 +1,25 @@
 <?php
 return [
-    'episodes' => [
-        'name'        => 'Episodes',
-        'description' => 'Lists all of the episodes of a show',
-        'properties'  => [
+    'common'   => [
+        'properties' => [
             'show_slug'    => [
                 'title'       => "Show's slug",
                 'description' => "The slug of the show to load"
             ],
+            'episode_slug' => [
+                'title'       => "Episode's slug",
+                'description' => "The slug of the episode to load"
+            ],
+            'update_title' => [
+                'title'       => 'Update page title',
+                'description' => "Updates page title using placeholders. Ex: {{show.name}}. Place @ infront of {{ to escape.",
+            ],
+        ],
+    ],
+    'episodes' => [
+        'name'        => 'Episodes',
+        'description' => 'Lists all of the episodes of a show',
+        'properties'  => [
             'per_page'     => [
                 'title'             => 'Episodes per page',
                 'description'       => 'Maximum amount of episodes to list per page',
@@ -19,7 +31,7 @@ return [
                 'group'       => 'Links',
             ],
         ],
-        'groups' => [
+        'groups'      => [
             'links' => 'Links',
         ]
     ],
@@ -27,24 +39,20 @@ return [
         'name'        => 'RSS Feed',
         'description' => 'Generates an RSS feed based on show slug and release type slug',
         'properties'  => [
-            'show_slug'          => [
-                'title'       => "Show's slug",
-                'description' => "The slug of the show to load"
-            ],
-            'release_type_slug'  => [
+            'release_type_slug' => [
                 'title'       => "Release type's slug",
                 'description' => "The slug of the release type to load"
             ],
-            'item_limit'     => [
+            'item_limit'        => [
                 'title'             => 'Episodes to show',
                 'description'       => 'Maximum amount of episodes to list in feed',
                 'validationMessage' => 'Episodes to show must be a number'
             ],
-            'show_page' => [
+            'show_page'         => [
                 'title'       => "Show page",
                 'description' => "Show page"
             ],
-            'episode_page'  => [
+            'episode_page'      => [
                 'title'       => "Episode page",
                 'description' => "Episode details page"
             ],

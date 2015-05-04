@@ -2,6 +2,7 @@
 
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
+use CosmicRadioTV\Podcast\classes\TitlePlaceholdersTrait;
 use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
 use CosmicRadioTV\Podcast\Models\Show;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -14,6 +15,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class Episodes extends ComponentBase
 {
+
+    use TitlePlaceholdersTrait;
 
     /**
      * @var Show The show being displayed
@@ -47,10 +50,11 @@ class Episodes extends ComponentBase
     {
         return [
             'showSlug'    => [
-                'title'       => 'cosmicradiotv.podcast::components.episodes.properties.show_slug.title',
-                'description' => 'cosmicradiotv.podcast::components.episodes.properties.show_slug.description',
+                'title'       => 'cosmicradiotv.podcast::components.common.properties.show_slug.title',
+                'description' => 'cosmicradiotv.podcast::components.common.properties.show_slug.description',
                 'default'     => '{{ :show_slug }}',
                 'type'        => 'string',
+                'required'    => true,
             ],
             'perPage'     => [
                 'title'             => 'cosmicradiotv.podcast::components.episodes.properties.per_page.title',
@@ -61,6 +65,12 @@ class Episodes extends ComponentBase
                 'validationMessage' => trans('cosmicradiotv.podcast::components.episodes.properties.per_page.validationMessage'),
                 'required'          => true,
             ],
+            'updateTitle' => [
+                'title'       => 'cosmicradiotv.podcast::components.common.properties.update_title.title',
+                'description' => 'cosmicradiotv.podcast::components.common.properties.update_title.description',
+                'default'     => true,
+                'type'        => 'checkbox',
+            ],
             'episodePage' => [
                 'title'       => 'cosmicradiotv.podcast::components.episodes.properties.episode_page.title',
                 'description' => 'cosmicradiotv.podcast::components.episodes.properties.episode_page.description',
@@ -68,7 +78,7 @@ class Episodes extends ComponentBase
                 'default'     => 'podcast/episode',
                 'required'    => true,
                 'group'       => trans('cosmicradiotv.podcast::components.episodes.groups.links'),
-            ]
+            ],
         ];
     }
 
@@ -88,6 +98,9 @@ class Episodes extends ComponentBase
             return $this->controller->run('404');
         }
 
+        if ($this->property('updateTitle')) {
+            $this->updateTitle();
+        }
 
         return null;
     }
@@ -106,9 +119,9 @@ class Episodes extends ComponentBase
                                      ->orderBy('release', 'desc')
                                      ->paginate(intval($this->property('perPage')));
 
-        $this->episodes->getCollection()->each(function(EpisodeModel $episode) {
-           // Cache URL value to the model
-           $episode->url = $this->getEpisodeURL($episode);
+        $this->episodes->getCollection()->each(function (EpisodeModel $episode) {
+            // Cache URL value to the model
+            $episode->url = $this->getEpisodeURL($episode);
         });
     }
 
@@ -133,5 +146,18 @@ class Episodes extends ComponentBase
     {
         return $this->controller->pageUrl($this->property('episodePage'),
             ['show_slug' => $this->show->slug, 'episode_slug' => $episode->slug]);
+    }
+
+    /**
+     * Update page's title using placeholders
+     */
+    protected function updateTitle()
+    {
+        $raw = $this->page->title;
+        $paths = (object) [
+            'show' => $this->show,
+        ];
+
+        $this->page->title = $this->replacePlaceholders($raw, $paths);
     }
 }

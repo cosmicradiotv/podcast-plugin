@@ -78,8 +78,8 @@ class FeedComponent extends ComponentBase
     {
         return [
             'showSlug'        => [
-                'title'       => 'cosmicradiotv.podcast::components.feed.properties.show_slug.title',
-                'description' => 'cosmicradiotv.podcast::components.feed.properties.show_slug.description',
+                'title'       => 'cosmicradiotv.podcast::components.common.properties.show_slug.title',
+                'description' => 'cosmicradiotv.podcast::components.common.properties.show_slug.description',
                 'default'     => '{{ :show_slug }}',
                 'type'        => 'string',
             ],
@@ -90,12 +90,12 @@ class FeedComponent extends ComponentBase
                 'type'        => 'string',
             ],
             'itemLimit'       => [
-                'title'             => 'cosmicradiotv.podcast::components.episodes.properties.item_limit.title',
-                'description'       => 'cosmicradiotv.podcast::components.episodes.properties.item_limit.description',
+                'title'             => 'cosmicradiotv.podcast::components.feed.properties.item_limit.title',
+                'description'       => 'cosmicradiotv.podcast::components.feed.properties.item_limit.description',
                 'default'           => 100,
                 'type'              => 'string',
                 'validationPattern' => '^[0-9]+$',
-                'validationMessage' => trans('cosmicradiotv.podcast::components.episodes.properties.item_limit.validationMessage'),
+                'validationMessage' => trans('cosmicradiotv.podcast::components.feed.properties.item_limit.validationMessage'),
                 'required'          => true,
             ],
             'showPage'        => [
