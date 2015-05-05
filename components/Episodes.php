@@ -149,15 +149,15 @@ class Episodes extends ComponentBase
     }
 
     /**
-     * Update page's title using placeholders
+     * Things to replace placeholders with
+     *
+     * @return object
      */
-    protected function updateTitle()
+    protected function getTitlePlaceholderReplaces()
     {
-        $raw = $this->page->title;
-        $paths = (object) [
+        return (object) [
             'show' => $this->show,
         ];
-
-        $this->page->title = $this->replacePlaceholders($raw, $paths);
     }
+
 }

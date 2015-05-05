@@ -6,11 +6,8 @@ use CosmicRadioTV\Podcast\Models\Release;
 use CosmicRadioTV\Podcast\Models\Show;
 use CosmicRadioTV\Podcast\Models;
 use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
-use CosmicRadioTV\Podcast\Models\ReleaseType;
-use CosmicRadioTV\Podcast\Classes\VideoUrlParser;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Request;
 
 class Episode extends ComponentBase
 {
@@ -78,6 +75,8 @@ class Episode extends ComponentBase
 
     /**
      * Runs when the page or layout loads (sets up properties available to the component partial)
+     *
+     * @returns null|string
      */
     public function onRun()
     {
@@ -127,16 +126,16 @@ class Episode extends ComponentBase
     }
 
     /**
-     * Update page's title using placeholders
+     * Things to replace placeholders with
+     *
+     * @return object
      */
-    protected function updateTitle()
+    protected function getTitlePlaceholderReplaces()
     {
-        $raw = $this->page->title;
-        $paths = (object) [
+        return (object) [
             'show'    => $this->show,
             'episode' => $this->episode,
         ];
-
-        $this->page->title = $this->replacePlaceholders($raw, $paths);
     }
+
 }

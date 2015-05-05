@@ -17,6 +17,7 @@ use October\Rain\Database\Traits\Sortable;
  * @property      string               $slug     Release type's slug
  * @property      string               $type     Release type
  * @property      string               $filetype Release's filetype
+ * @property      int                  $sort_order Release type's order when sorted
  * @property-read Collection|Release[] $releases Releases that are of this type
  * @method \October\Rain\Database\Relations\HasMany releases()
  */
