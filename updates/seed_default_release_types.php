@@ -17,17 +17,20 @@ class SeedDefaultReleaseTypes extends Seeder
             'name' => 'Audio',
             'type' => 'audio',
             'filetype' => 'audio/mpeg',
+            'sort_order' => '2',
         ]);
 
         ReleaseType::create([
             'name' => 'Video',
             'type' => 'video',
             'filetype' => 'video/mp4',
+            'sort_order' => '1',
         ]);
 
         ReleaseType::create([
             'name' => 'Youtube',
             'type' => 'youtube',
+            'sort_order' => '0',
         ]);
     }
 }

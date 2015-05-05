@@ -13,3 +13,6 @@
   - Add some RSS feed specific fields
   - allow_null_release_size.php
   - add_standard_rss_fields.php
+1.0.5:
+  - Make release types user sortable
+  - add_sort_order_to_release_types.php

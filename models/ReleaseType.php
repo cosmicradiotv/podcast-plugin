@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use October\Rain\Database\Model;
 use October\Rain\Database\Traits\Sluggable;
 use October\Rain\Database\Traits\Validation;
+use October\Rain\Database\Traits\Sortable;
 
 /**
  * Class ReleaseType
@@ -21,7 +22,7 @@ use October\Rain\Database\Traits\Validation;
  */
 class ReleaseType extends Model
 {
-
+    use Sortable;
     use Sluggable;
     use Validation {
         makeValidator as baseMakeValidator;

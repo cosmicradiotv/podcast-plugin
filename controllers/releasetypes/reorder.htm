@@ -1,0 +1,34 @@
+<?php Block::put('breadcrumb') ?>
+    <ul>
+        <li><a href="<?= Backend::url('cosmicradiotv/podcast/releasetypes') ?>"><?= e(trans('cosmicradiotv.podcast::lang.release_type.plural')) ?></a></li>
+        <li><?= e($this->pageTitle) ?></li>
+    </ul>
+<?php Block::endPut() ?>
+
+<?= Form::open(['class' => 'layout', 'id' => 'sortForm']) ?>
+		<div class="layout-row">
+		<?= $this->makePartial('reorder_records', ['records' => $records]) ?>
+		</div>
+
+        <div class="form-buttons">
+            <div class="loading-indicator-container">
+	          	<button id="saveOrder"
+                    type="submit"
+                    data-hotkey="ctrl+s, cmd+s"
+                    data-load-indicator="<?= e(trans('cosmicradiotv.podcast::lang.release_type.saving')) ?>"
+                    class="btn btn-primary">
+                    <?= '<u>'.substr(e(trans('cosmicradiotv.podcast::lang.general.save')),0,1).'</u>'.substr(e(trans('cosmicradiotv.podcast::lang.general.save')),1) ?>
+                </button>
+                <button id="saveOrderAndClose"
+                    type="button"
+                    data-hotkey="ctrl+enter, cmd+enter"
+                    data-load-indicator="<?= e(trans('cosmicradiotv.podcast::lang.release_type.saving')) ?>"
+                    class="btn btn-default">
+                    <?= e(trans('cosmicradiotv.podcast::lang.general.save_and_close')) ?>
+                </button>
+                <span class="btn-text">
+                    or <a href="<?= Backend::url('cosmicradiotv/podcast/releasetypes') ?>"><?= e(trans('cosmicradiotv.podcast::lang.general.cancel')) ?></a>
+                </span>
+			</div>
+		</div>
+<?= Form::close() ?>

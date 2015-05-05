@@ -130,11 +130,13 @@ return [
         'type_youtube'         => 'YouTube',
         'filetype'             => 'Filetype',
         'filetype_placeholder' => 'New release type filetype',
+        'sort_order'            => 'Display Order',
         # Actions and statuses
         'create'               => 'Create Release Type',
         'new'                  => 'New Release Type',
         'update'               => 'Edit Release Type',
         'preview'              => 'Preview Release Type',
+        'reorder'              => 'Reorder Release Types',
         'saving'               => 'Saving Release Type...',
         'deleting'             => 'Deleting Release Type...',
         'creating'             => 'Creating Release Type...',

@@ -1,0 +1,22 @@
+.control-simplelist > ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.control-simplelist li {
+	height: 3em;
+	line-height: 3em;
+	border-bottom: 1px solid #DDD;
+	cursor: pointer;
+    cursor: hand;
+}
+
+.control-simplelist li.sortable-placeholder {
+	border: 1px dashed #CCC;
+	background: none;
+}
+
+.control-simplelist li.sortable-dragging {
+	border: none;
+	background: none;
+}
