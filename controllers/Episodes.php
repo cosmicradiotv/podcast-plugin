@@ -49,12 +49,12 @@ class Episodes extends Controller
     public function listExtendQuery($query, $definition = null) {
         $user = BackendAuth::getUser();
 
-        if (!$user->hasPermission(['cosmicradiotv.podcast.access_episodes_all'])) {
+        if (!$user->hasAccess(['cosmicradiotv.podcast.access_episodes_all'])) {
             $shows = Show::all();
             $show_ids_allowed = [];
 
             foreach ($shows as $show) {
-                if ($user->hasPermission(['cosmicradiotv.podcast.access_show_'.$show->slug])) {
+                if ($user->hasAccess(['cosmicradiotv.podcast.access_show_'.$show->slug])) {
                     $show_ids_allowed[] = $show->id;
                 }
             }
