@@ -52,7 +52,7 @@ class FeedComponent extends ComponentBase
      */
     protected $feed_episode_fields = [
         'title'   => 'title',
-        'summary' => 'description',
+        'summary' => ['description', 'itunes:summary'],
         'length'  => 'itunes:duration',
     ];
 
@@ -209,8 +209,9 @@ class FeedComponent extends ComponentBase
      */
     public function generateXML()
     {
-        $root = new SimpleXMLElement("<rss></rss>");
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><rss></rss>');
         $root['version'] = '2.0';
+        $root['xmlns:atom'] = 'http://www.w3.org/2005/Atom';
         $root['xmlns:itunes'] = 'http://www.itunes.com/dtds/podcast-1.0.dtd';
 
         $channel = $this->addChannelToFeed($root);
@@ -247,6 +248,9 @@ class FeedComponent extends ComponentBase
         $channel->link = $this->controller->pageUrl($this->property('showPage'), ['show_slug' => $this->show->slug]);
         $channel->generator = 'CosmicRadioTV/podcast-plugin';
         $channel->docs = 'http://blogs.law.harvard.edu/tech/rss';
+        $channel->{'atom:link'}['rel'] = 'self';
+        $channel->{'atom:link'}['href'] = $this->controller->currentPageUrl();
+
         if ($this->show->image) {
             $channel->image->url = asset($this->show->image->getPath());
             $channel->image->title = $this->show->name;
