@@ -1,5 +1,6 @@
 <?php namespace CosmicRadioTV\Podcast\Components;
 
+use Cms\Classes\CodeBase;
 use Cms\Classes\ComponentBase;
 use CosmicRadioTV\Podcast\classes\TitlePlaceholdersTrait;
 use CosmicRadioTV\Podcast\Models\Release;
@@ -14,6 +15,22 @@ use Request;
 
 class LatestEpisode extends Episode
 {
+
+    /**
+     * Component constructor. Takes in the page or layout code section object
+     * and properties set by the page or layout.
+     * Override: change dirname
+     *
+     * @param CodeBase $cmsObject
+     * @param array    $properties
+     */
+    public function __construct(CodeBase $cmsObject = null, $properties = [])
+    {
+        parent::__construct($cmsObject, $properties);
+
+        $this->dirName = str_replace('latestepisode', 'episode', $this->dirName);
+    }
+
     /**
      * Component Details
      *

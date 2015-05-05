@@ -1,1 +1,16 @@
-{% partial __SELF__~"::episode" %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>{{__SELF__.show.name}}</h2>
+        <h3>{{ __SELF__.episode.title }}</h3>
+
+        {% partial __SELF__~"::player" %}
+
+        <p>{{ __SELF__.episode.summary|e|nl2br }}</p>
+
+        <p>Released: {{ __SELF__.episode.release|date("M d, Y")}} | Duration: {{ __SELF__.episode.length|sectotime }}</p>
+
+        <h3>Show Notes</h3>
+
+        {{ __SELF__.episode.content|raw }}
+    </div>
+</div>
