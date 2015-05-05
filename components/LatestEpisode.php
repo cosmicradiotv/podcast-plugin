@@ -81,14 +81,9 @@ class LatestEpisode extends Episode
 
         $this->releases = Collection::make($this->episode->releases); // Creates a copy
         $this->releases->sort(function (Release $a, Release $b) {
-            // Order: Youtube > (rest) > Video > Audio
-            $ratings = [
-                'youtube' => 1,
-                'video'   => 8,
-                'audio'   => 9
-            ];
-            $aRating = $ratings[$a->release_type->type] ?: 7;
-            $bRating = $ratings[$b->release_type->type] ?: 7;
+            // Order by the sort_order column
+            $aRating = $a->release_type->sort_order;
+            $bRating = $b->release_type->sort_order;
 
             return $aRating - $bRating;
         });
