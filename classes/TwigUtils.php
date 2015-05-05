@@ -18,7 +18,6 @@ class TwigUtils {
         	    $s[] = floor($seconds / 60);
         		$s[] = sprintf('%02d',floor($seconds % 60));
         }
-        //return print_r($s,true);
 
         return join(':', $s);
 	}

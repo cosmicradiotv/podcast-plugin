@@ -89,6 +89,77 @@ class Episode extends Model
     public $url;
 
     /**
+     * @var Array Stores the cached next episode data
+     */
+    public $nextEpisodeCache;
+
+    /**
+     * @var Array Stores the cached previous episode data
+     */
+    public $previousEpisodeCache;
+
+    /**
+     * Returns the next episode (cached for this instance)
+     * @param  boolean $ofShow If true returns the next episode of the same show
+     * @return Episode         The next episode
+     */
+    public function nextCached($ofShow = false) {
+        if (empty($nextEpisodeCache)) {
+            $nextEpisodeCache = array(
+                    true => null,
+                    false => null
+            );
+        }
+        if (empty($nextEpisodeCache[$ofShow])) {
+            $nextEpisodeCache[$ofShow] = $this->next($ofShow);
+        }
+        return $nextEpisodeCache[$ofShow];
+    }
+
+    /**
+     * Returns the previous episode (cached for this instance)
+     * @param  boolean $ofShow If true returns the next episode of the same show
+     * @return Episode         The previous episode
+     */
+    public function previousCached($ofShow = false) {
+        if (empty($previousEpisodeCache)) {
+            $previousEpisodeCache = array(
+                    true => null,
+                    false => null
+            );
+        }
+        if (empty($previousEpisodeCache[$ofShow])) {
+            $previousEpisodeCache[$ofShow] = $this->previous($ofShow);
+        }
+        return $previousEpisodeCache[$ofShow];
+    }
+ 
+    /**
+     * Returns the next episode
+     * @param  boolean  $ofShow If true returns the next episode of the same show
+     * @return Episode          The next episode
+     */
+    public function next($ofShow = false) {
+        $query = Episode::query();
+        if ($ofShow) {
+            $query = $query->where('show_id',$this->show_id);
+        }
+        return $query->where('published',true)->where('release','>',$this->release)->orderBy('release','asc')->take(1)->get()->first();
+    }
+    /**
+     * Returns the previous episode
+     * @param  boolean  $ofShow If true returns the previous episode of the same show
+     * @return Episode          The previous episode
+     */
+    public function previous($ofShow = false) {
+        $query = Episode::query();
+        if ($ofShow) {
+            $query = $query->where('show_id',$this->show_id);
+        }
+        return $query->where('published',true)->where('release','<',$this->release)->orderBy('release','desc')->take(1)->get()->first();
+    }
+
+    /**
      * Runs before an episode is deleted to remove all the releases that depend on it
      */
     protected function beforeDelete()
