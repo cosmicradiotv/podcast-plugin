@@ -128,7 +128,7 @@ class Episode extends Model
      * @return Episode          The next episode
      */
     public function next($ofShow = false) {
-        $query = Episode::query();
+        $query = self::query();
         if ($ofShow) {
             $query = $query->where('show_id',$this->show_id);
         }
@@ -140,7 +140,7 @@ class Episode extends Model
      * @return Episode          The previous episode
      */
     public function previous($ofShow = false) {
-        $query = Episode::query();
+        $query = self::query();
         if ($ofShow) {
             $query = $query->where('show_id',$this->show_id);
         }
