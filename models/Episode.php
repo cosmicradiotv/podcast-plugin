@@ -208,7 +208,12 @@ class Episode extends Model
         $separator = $this->getSluggableSeparator();
 
         // Remove any existing suffixes
-        $_value = preg_replace('/' . preg_quote($separator) . '[0-9]+$/', '', trim($value));
+        //$_value = preg_replace('/' . preg_quote($separator) . '[0-9]+$/', '', trim($value));
+
+        // Don't remove any existing suffixes
+        // Test case: 'Episode 3' -> 'episode-3' -> 'episode'
+        // Can end up in episode-3-2 when slug episode-3 doesn't exist but episode does (see line+5)
+        $_value = $value;
 
         while ($this->newQuery()->where('show_id', $this->show_id)->where($name, $_value)->count() > 0) {
             $counter++;
