@@ -58,9 +58,10 @@ class LatestEpisode extends Episode
      */
     public function setState()
     {
-        if (!empty($this->property('showSlugFilter'))) {
+        $showSlugFilter = $this->property('showSlugFilter');
+        if (!empty($showSlugFilter)) {
             $this->show = Show::query()
-                  ->where('slug', $this->property('showSlugFilter'))
+                  ->where('slug', $showSlugFilter)
                   ->firstOrFail();
 
             $this->episode = $this->show->episodes()
