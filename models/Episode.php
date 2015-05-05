@@ -91,12 +91,12 @@ class Episode extends Model
     /**
      * @var Array Stores the cached next episode data
      */
-    public $nextEpisodeCache;
+    protected $nextEpisodeCache = [true => null, false => null];
 
     /**
      * @var Array Stores the cached previous episode data
      */
-    public $previousEpisodeCache;
+    protected $previousEpisodeCache = [true => null, false => null];
 
     /**
      * Returns the next episode (cached for this instance)
@@ -104,16 +104,10 @@ class Episode extends Model
      * @return Episode         The next episode
      */
     public function nextCached($ofShow = false) {
-        if (empty($nextEpisodeCache)) {
-            $nextEpisodeCache = array(
-                    true => null,
-                    false => null
-            );
+        if (empty($this->nextEpisodeCache[$ofShow])) {
+            $this->nextEpisodeCache[$ofShow] = $this->next($ofShow);
         }
-        if (empty($nextEpisodeCache[$ofShow])) {
-            $nextEpisodeCache[$ofShow] = $this->next($ofShow);
-        }
-        return $nextEpisodeCache[$ofShow];
+        return $this->nextEpisodeCache[$ofShow];
     }
 
     /**
@@ -122,16 +116,10 @@ class Episode extends Model
      * @return Episode         The previous episode
      */
     public function previousCached($ofShow = false) {
-        if (empty($previousEpisodeCache)) {
-            $previousEpisodeCache = array(
-                    true => null,
-                    false => null
-            );
+        if (empty($this->previousEpisodeCache[$ofShow])) {
+            $this->previousEpisodeCache[$ofShow] = $this->previous($ofShow);
         }
-        if (empty($previousEpisodeCache[$ofShow])) {
-            $previousEpisodeCache[$ofShow] = $this->previous($ofShow);
-        }
-        return $previousEpisodeCache[$ofShow];
+        return $this->previousEpisodeCache[$ofShow];
     }
  
     /**
