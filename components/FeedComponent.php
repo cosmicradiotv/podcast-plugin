@@ -259,19 +259,7 @@ class FeedComponent extends ComponentBase
         }
         // iTunes categories
         if ($this->show->itunes_category) {
-            $categories = explode("\r\n", $this->show->itunes_category);
-            /** @var SimpleXMLElement $previous */
-            $previous = null;
-            foreach ($categories as $category) {
-                if (substr($category, 0, 1) == ' ' && isset($previous)) {
-                    $element = $previous->addChild('xmlns:itunes:category');
-                    $text = substr($category, 1);
-                } else {
-                    $previous = $element = $channel->addChild('xmlns:itunes:category');
-                    $text = $category;
-                }
-                $element['text'] = $text;
-            }
+            $this->setItunesCategories($channel);
         }
         if ($this->show->itunes_explicit) {
             $channel->{'itunes:explicit'} = 'yes';
@@ -287,6 +275,30 @@ class FeedComponent extends ComponentBase
     }
 
     /**
+     * Set iTunes categories on the feed
+     *
+     * @param SimpleXMLElement $channel
+     */
+    protected function setItunesCategories(SimpleXMLElement $channel)
+    {
+        $categories = explode("\r\n", $this->show->itunes_category);
+        /** @var SimpleXMLElement $previous */
+        $previous = null;
+        foreach ($categories as $category) {
+            if (substr($category, 0, 1) == ' ' && isset($previous)) {
+                $element = $previous->addChild('xmlns:itunes:category');
+                $text = substr($category, 1);
+            } else {
+                $previous = $element = $channel->addChild('xmlns:itunes:category');
+                $text = $category;
+            }
+            $element['text'] = $text;
+        }
+    }
+
+    /**
+     * Add episodes to the channel
+     *
      * @param SimpleXMLElement $channel
      */
     protected function addEpisodesToChannel(SimpleXMLElement $channel)
