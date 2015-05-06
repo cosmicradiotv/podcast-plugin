@@ -1,6 +1,6 @@
 <?php
 return [
-    'common'   => [
+    'common'         => [
         'properties' => [
             'show_slug'    => [
                 'title'       => "Show's slug",
@@ -16,40 +16,47 @@ return [
             ],
         ],
     ],
-    'episode' => [
-        'name'          => 'Episode Component',
-        'description'   => 'Used to display an Episode'
+    'episode'        => [
+        'name'        => 'Episode Component',
+        'description' => 'Used to display an Episode'
     ],
     'latest_episode' => [
-        'name'          => 'Latest Episode Component',
-        'description'   => 'Used to display the latest Episode',
-        'properties'    => [
+        'name'        => 'Latest Episode Component',
+        'description' => 'Used to display the latest Episode',
+        'properties'  => [
             'show_slug_filter' => [
-                'title'         => "Show slug filter (optional)",
-                'description'   => 'Specifies which show to pull the latest episode from (all if left blank)',
+                'title'       => "Show slug filter (optional)",
+                'description' => 'Specifies which show to pull the latest episode from (all if left blank)',
             ]
         ]
     ],
-    'episodes' => [
+    'episodes'       => [
         'name'        => 'Episodes',
         'description' => 'Lists all of the episodes of a show',
         'properties'  => [
-            'per_page'     => [
+            'allow_pagination' => [
+                'title'       => 'Allow pagination',
+                'description' => 'Sets if this component adds pagination links and if it checks url for ?page= to paginate items.',
+            ],
+            'episode_page'     => [
+                'title'       => 'Episode page',
+                'description' => 'Episode details page',
+            ],
+            'per_page'         => [
                 'title'             => 'Episodes per page',
                 'description'       => 'Maximum amount of episodes to list per page',
                 'validationMessage' => 'Episodes per page must be a number'
             ],
-            'episode_page' => [
-                'title'       => 'Episode page',
-                'description' => 'Episode details page',
-                'group'       => 'Links',
+            'show_slug'        => [
+                'description' => 'The slug of the show to load. If left blank all episodes of all shows are used.',
             ],
         ],
         'groups'      => [
-            'links' => 'Links',
+            'links'      => 'Links',
+            'pagination' => 'Pagination',
         ]
     ],
-    'feed'     => [
+    'feed'           => [
         'name'        => 'RSS Feed',
         'description' => 'Generates an RSS feed based on show slug and release type slug',
         'properties'  => [

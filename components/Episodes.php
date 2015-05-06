@@ -5,6 +5,7 @@ use Cms\Classes\Page;
 use CosmicRadioTV\Podcast\classes\TitlePlaceholdersTrait;
 use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
 use CosmicRadioTV\Podcast\Models\Show;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -19,14 +20,19 @@ class Episodes extends ComponentBase
     use TitlePlaceholdersTrait;
 
     /**
+     * @var bool
+     */
+    public $allowPagination;
+
+    /**
+     * @var LengthAwarePaginator|Collection|EpisodeModel[] Paginator instance of all of the episodes
+     */
+    public $episodes;
+
+    /**
      * @var Show The show being displayed
      */
     public $show;
-
-    /**
-     * @var LengthAwarePaginator|Episode[] Pagintor instance of all of the episodes
-     */
-    public $episodes;
 
     /**
      * Component Details
@@ -49,14 +55,21 @@ class Episodes extends ComponentBase
     public function defineProperties()
     {
         return [
-            'showSlug'    => [
+            'showSlug'        => [
                 'title'       => 'cosmicradiotv.podcast::components.common.properties.show_slug.title',
-                'description' => 'cosmicradiotv.podcast::components.common.properties.show_slug.description',
+                'description' => 'cosmicradiotv.podcast::components.episodes.properties.show_slug.description',
                 'default'     => '{{ :show_slug }}',
                 'type'        => 'string',
-                'required'    => true,
             ],
-            'perPage'     => [
+            'episodePage'     => [
+                'title'       => 'cosmicradiotv.podcast::components.episodes.properties.episode_page.title',
+                'description' => 'cosmicradiotv.podcast::components.episodes.properties.episode_page.description',
+                'type'        => 'dropdown',
+                'default'     => 'podcast/episode',
+                'required'    => true,
+                'group'       => trans('cosmicradiotv.podcast::components.episodes.groups.links'),
+            ],
+            'perPage'         => [
                 'title'             => 'cosmicradiotv.podcast::components.episodes.properties.per_page.title',
                 'description'       => 'cosmicradiotv.podcast::components.episodes.properties.per_page.description',
                 'default'           => 10,
@@ -64,20 +77,20 @@ class Episodes extends ComponentBase
                 'validationPattern' => '^[0-9]+$',
                 'validationMessage' => trans('cosmicradiotv.podcast::components.episodes.properties.per_page.validationMessage'),
                 'required'          => true,
+                'group'             => trans('cosmicradiotv.podcast::components.episodes.groups.pagination')
             ],
-            'updateTitle' => [
+            'allowPagination' => [
+                'title'       => 'cosmicradiotv.podcast::components.episodes.properties.allow_pagination.title',
+                'description' => 'cosmicradiotv.podcast::components.episodes.properties.allow_pagination.description',
+                'default'     => true,
+                'type'        => 'checkbox',
+                'group'       => trans('cosmicradiotv.podcast::components.episodes.groups.pagination')
+            ],
+            'updateTitle'     => [
                 'title'       => 'cosmicradiotv.podcast::components.common.properties.update_title.title',
                 'description' => 'cosmicradiotv.podcast::components.common.properties.update_title.description',
                 'default'     => true,
                 'type'        => 'checkbox',
-            ],
-            'episodePage' => [
-                'title'       => 'cosmicradiotv.podcast::components.episodes.properties.episode_page.title',
-                'description' => 'cosmicradiotv.podcast::components.episodes.properties.episode_page.description',
-                'type'        => 'dropdown',
-                'default'     => 'podcast/episode',
-                'required'    => true,
-                'group'       => trans('cosmicradiotv.podcast::components.episodes.groups.links'),
             ],
         ];
     }
@@ -112,17 +125,68 @@ class Episodes extends ComponentBase
      */
     public function setState()
     {
-        $this->show = Show::query()->where('slug', $this->property('showSlug'))->firstOrFail();
-        $this->episodes = $this->show->episodes()
-                                     ->with('image')
-                                     ->where('published', true)
-                                     ->orderBy('release', 'desc')
-                                     ->paginate(intval($this->property('perPage')));
+        $this->allowPagination = (bool) $this->property('allowPagination');
+        $this->show = $this->loadShow();
+        $this->episodes = $this->loadEpisodes();
+    }
 
-        $this->episodes->getCollection()->each(function (EpisodeModel $episode) {
+    /**
+     * If a show is requested by slug loads it, or null if all shows (left blank)
+     *
+     * @throws ModelNotFoundException
+     * @return Show|null
+     */
+    protected function loadShow()
+    {
+        $slug = $this->property('showSlug');
+
+        if ($slug) {
+            return Show::query()->where('slug', $this->property('showSlug'))->firstOrFail();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Loads episodes for the current show (or all shows if not set
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection|EpisodeModel[]
+     */
+    protected function loadEpisodes()
+    {
+        if ($this->show) {
+            // Show's episodes
+            $query = $this->show->episodes();
+            $setShows = true; // Skips loading from database
+        } else {
+            // All shows' episodes
+            $query = EpisodeModel::query();
+            $query->with('show');
+            $setShows = false;
+        }
+
+        $query->with('image')
+              ->where('published', true)
+              ->orderBy('release', 'desc');
+
+        if ($this->allowPagination) {
+            /** @var LengthAwarePaginator|EpisodeModel[] $returns */
+            $returns = $query->paginate(intval($this->property('perPage')));
+            $collection = $returns->getCollection();
+        } else {
+            $returns = $collection = $query->take($this->property('perPage'))->get();
+        }
+
+        $collection->each(function (EpisodeModel $episode) use ($setShows) {
+            if ($setShows) {
+                $episode->setRelation('show', $this->show);
+            }
+
             // Cache URL value to the model
             $episode->url = $this->getEpisodeURL($episode);
         });
+
+        return $returns;
     }
 
     /**
@@ -145,7 +209,7 @@ class Episodes extends ComponentBase
     public function getEpisodeURL(EpisodeModel $episode)
     {
         return $this->controller->pageUrl($this->property('episodePage'),
-            ['show_slug' => $this->show->slug, 'episode_slug' => $episode->slug]);
+            ['show_slug' => $episode->show->slug, 'episode_slug' => $episode->slug]);
     }
 
     /**

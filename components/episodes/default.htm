@@ -3,22 +3,24 @@
 {% set show = __SELF__.show %}
 {% set episodes = __SELF__.episodes %}
 
-<div class="row">
-    <div class="col-md-12">
-        <h2>{{ show.name|e }}</h2>
+{% if show %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2>{{ show.name|e }}</h2>
 
-        <div class="row">
-            {% if show.image %}
-            <div class="col-md-4">
-                <img src="{{ show.image.thumb(400, 400) }}" class="img-responsive" />
-            </div>
-            {% endif %}
-            <div class="{% if show.image %}col-md-8{% else %}col-md-12{% endif %}">
-                {{ show.description|e|nl2br }}
+            <div class="row">
+                {% if show.image %}
+                <div class="col-md-4">
+                    <img src="{{ show.image.thumb(400, 400) }}" class="img-responsive" />
+                </div>
+                {% endif %}
+                <div class="{% if show.image %}col-md-8{% else %}col-md-12{% endif %}">
+                    {{ show.description|e|nl2br }}
+                </div>
             </div>
         </div>
     </div>
-</div>
+{% endif %}
 
 <div class="row">
     <div class="col-md-12">
@@ -42,7 +44,9 @@
             {% endfor %}
         </ul>
 
-        {{ episodes.render|raw }}
+        {% if __SELF__.allowPagination %}
+            {{ episodes.render|raw }}
+        {% endif %}
     </div>
 </div>
 
