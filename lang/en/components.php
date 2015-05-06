@@ -10,6 +10,9 @@ return [
                 'title'       => "Episode's slug",
                 'description' => "The slug of the episode to load"
             ],
+            'tag_slug' => [
+                'title'       => "Tag's slug",
+            ],
             'update_title' => [
                 'title'       => 'Update page title',
                 'description' => "Updates page title using placeholders. Ex: {{show.name}}. Place @ infront of {{ to escape.",
@@ -50,8 +53,12 @@ return [
             'show_slug'        => [
                 'description' => 'The slug of the show to load. If left blank all episodes of all shows are used.',
             ],
+            'tag_slug'        => [
+                'description' => 'The slug of the tag to filter by. Ignored if blank.',
+            ],
         ],
         'groups'      => [
+            'filters'    => 'Filters',
             'links'      => 'Links',
             'pagination' => 'Pagination',
         ]

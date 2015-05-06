@@ -5,9 +5,11 @@ use Cms\Classes\Page;
 use CosmicRadioTV\Podcast\classes\TitlePlaceholdersTrait;
 use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
 use CosmicRadioTV\Podcast\Models\Show;
+use CosmicRadioTV\Podcast\Models\Tag;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use October\Rain\Database\Builder;
 
 /**
  * Component that lists all of the episodes of a show
@@ -35,6 +37,11 @@ class Episodes extends ComponentBase
     public $show;
 
     /**
+     * @var Tag Tag to filter episodes by
+     */
+    public $tag;
+
+    /**
      * Component Details
      *
      * @return array
@@ -60,6 +67,14 @@ class Episodes extends ComponentBase
                 'description' => 'cosmicradiotv.podcast::components.episodes.properties.show_slug.description',
                 'default'     => '{{ :show_slug }}',
                 'type'        => 'string',
+                'group'       => trans('cosmicradiotv.podcast::components.episodes.groups.filters'),
+            ],
+            'tagSlug'         => [
+                'title'       => 'cosmicradiotv.podcast::components.common.properties.tag_slug.title',
+                'description' => 'cosmicradiotv.podcast::components.episodes.properties.tag_slug.description',
+                'default'     => '',
+                'type'        => 'string',
+                'group'       => trans('cosmicradiotv.podcast::components.episodes.groups.filters'),
             ],
             'episodePage'     => [
                 'title'       => 'cosmicradiotv.podcast::components.episodes.properties.episode_page.title',
@@ -127,6 +142,9 @@ class Episodes extends ComponentBase
     {
         $this->allowPagination = (bool) $this->property('allowPagination');
         $this->show = $this->loadShow();
+        if ($this->property('tagSlug')) {
+            $this->tag = Tag::query()->where('slug', $this->property('tagSlug'))->firstOrFail();
+        }
         $this->episodes = $this->loadEpisodes();
     }
 
@@ -168,6 +186,12 @@ class Episodes extends ComponentBase
         $query->with('image')
               ->where('published', true)
               ->orderBy('release', 'desc');
+
+        if($this->tag) {
+            $query->whereHas('tags', function(Builder $q) {
+                $q->where('cosmicradiotv_podcast_tags.id', $this->tag->id);
+            });
+        }
 
         if ($this->allowPagination) {
             /** @var LengthAwarePaginator|EpisodeModel[] $returns */
