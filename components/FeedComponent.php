@@ -44,7 +44,7 @@ class FeedComponent extends ComponentBase
         'description'    => ['description', 'itunes:summary'],
         'feed_language'  => 'language',
         'feed_copyright' => 'copyright',
-        'feed_author'    => ['itunes:author', 'managingEditor']
+        'feed_author'    => 'itunes:author'
     ];
 
     /**
