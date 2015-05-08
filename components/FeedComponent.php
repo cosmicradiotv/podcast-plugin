@@ -253,7 +253,7 @@ class FeedComponent extends ComponentBase
 
         if ($this->show->image) {
             $channel->image->url = asset($this->show->image->getPath());
-            $channel->image->title = $this->show->name;
+            $channel->image->title = $channel->title;
             $channel->image->link = $channel->link;
             $channel->{'itunes:image'}['href'] = asset($this->show->image->getPath());
         }
