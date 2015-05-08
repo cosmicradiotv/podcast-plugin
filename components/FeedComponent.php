@@ -40,7 +40,6 @@ class FeedComponent extends ComponentBase
      * @var array Fields to map to RSS feed in channel
      */
     protected $feed_channel_fields = [
-        'name'           => 'title',
         'description'    => ['description', 'itunes:summary'],
         'feed_language'  => 'language',
         'feed_copyright' => 'copyright',
@@ -243,6 +242,7 @@ class FeedComponent extends ComponentBase
     protected function addChannelToFeed(SimpleXMLElement $root)
     {
         $channel = $root->addChild('channel');
+        $channel->title = "{$this->show->name} ({$this->releaseType->name})";
         $this->addFields($channel, $this->feed_channel_fields, $this->show);
 
         $channel->link = $this->controller->pageUrl($this->property('showPage'), ['show_slug' => $this->show->slug]);
