@@ -5,7 +5,6 @@
   - create_episodes_table.php
   - create_releases_table.php
   - create_tags_table.php
-  - seed_default_release_types.php
 1.0.3:
   - Fix ability to add releases to new shows
   - add_nullable_to_release_episode.php
@@ -16,3 +15,4 @@
 1.0.5:
   - Make release types user sortable
   - add_sort_order_to_release_types.php
+  - seed_default_release_types.php
