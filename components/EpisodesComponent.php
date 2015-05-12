@@ -1,9 +1,9 @@
 <?php namespace CosmicRadioTV\Podcast\Components;
 
-use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
-use CosmicRadioTV\Podcast\classes\TitlePlaceholdersTrait;
-use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
+use CosmicRadioTV\Podcast\Classes\ComponentBase;
+use CosmicRadioTV\Podcast\Classes\TitlePlaceholdersTrait;
+use CosmicRadioTV\Podcast\Models\Episode;
 use CosmicRadioTV\Podcast\Models\Show;
 use CosmicRadioTV\Podcast\Models\Tag;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,7 +17,7 @@ use URL;
  *
  * @package CosmicRadioTV\Podcast\Components
  */
-class Episodes extends ComponentBase
+class EpisodesComponent extends ComponentBase
 {
 
     use TitlePlaceholdersTrait;
@@ -28,7 +28,7 @@ class Episodes extends ComponentBase
     public $allowPagination;
 
     /**
-     * @var LengthAwarePaginator|Collection|EpisodeModel[] Paginator instance of all of the episodes
+     * @var LengthAwarePaginator|Collection|Episode[] Paginator instance of all of the episodes
      */
     public $episodes;
 
@@ -183,7 +183,7 @@ class Episodes extends ComponentBase
     /**
      * Loads episodes for the current show (or all shows if not set
      *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection|EpisodeModel[]
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection|Episode[]
      */
     protected function loadEpisodes()
     {
@@ -193,7 +193,7 @@ class Episodes extends ComponentBase
             $setShows = true; // Skips loading from database
         } else {
             // All shows' episodes
-            $query = EpisodeModel::query();
+            $query = Episode::query();
             $query->with('show');
             $setShows = false;
         }
@@ -209,14 +209,14 @@ class Episodes extends ComponentBase
         }
 
         if ($this->allowPagination) {
-            /** @var LengthAwarePaginator|EpisodeModel[] $returns */
+            /** @var LengthAwarePaginator|Episode[] $returns */
             $returns = $query->paginate(intval($this->property('perPage')));
             $collection = $returns->getCollection();
         } else {
             $returns = $collection = $query->take($this->property('perPage'))->get();
         }
 
-        $collection->each(function (EpisodeModel $episode) use ($setShows) {
+        $collection->each(function (Episode $episode) use ($setShows) {
             if ($setShows) {
                 $episode->setRelation('show', $this->show);
             }
@@ -235,7 +235,7 @@ class Episodes extends ComponentBase
      */
     public function getEpisodePageOptions()
     {
-        return Page::sortBy('baseFileName')->lists('baseFileName', 'baseFileName');
+        return Page::getNameList();
     }
 
     /**
@@ -245,7 +245,7 @@ class Episodes extends ComponentBase
      *
      * @return string
      */
-    public function getEpisodeURL(EpisodeModel $episode)
+    public function getEpisodeURL(Episode $episode)
     {
         return $this->controller->pageUrl($this->property('episodePage'),
             ['show_slug' => $episode->show->slug, 'episode_slug' => $episode->slug]);

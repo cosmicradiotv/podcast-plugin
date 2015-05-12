@@ -1,19 +1,15 @@
 <?php namespace CosmicRadioTV\Podcast\Components;
 
 use Cms\Classes\CodeBase;
-use Cms\Classes\ComponentBase;
-use CosmicRadioTV\Podcast\classes\TitlePlaceholdersTrait;
 use CosmicRadioTV\Podcast\Models\Release;
 use CosmicRadioTV\Podcast\Models\Show;
 use CosmicRadioTV\Podcast\Models;
-use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
-use CosmicRadioTV\Podcast\Models\ReleaseType;
-use CosmicRadioTV\Podcast\Classes\VideoUrlParser;
+use CosmicRadioTV\Podcast\Models\Episode;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Request;
 
-class LatestEpisode extends Episode
+
+class LatestEpisodeComponent extends EpisodeComponent
 {
 
     /**
@@ -88,7 +84,7 @@ class LatestEpisode extends Episode
                     ->with(['releases', 'releases.release_type', 'image', 'tags', 'show'])
                     ->firstOrFail();
         } else {
-            $this->episode = EpisodeModel::query()
+            $this->episode = Episode::query()
                     ->where('published', true)
                     ->orderBy('release', 'desc')
                     ->with(['releases', 'releases.release_type', 'image', 'tags', 'show'])

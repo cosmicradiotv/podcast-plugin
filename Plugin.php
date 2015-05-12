@@ -35,10 +35,10 @@ class Plugin extends PluginBase
     public function registerComponents()
     {
         return [
-            'CosmicRadioTV\Podcast\Components\Episode'       => 'episode',
-            'CosmicRadioTV\Podcast\Components\LatestEpisode' => 'latest_episode',
-            'CosmicRadioTV\Podcast\Components\Episodes'      => 'episodes',
-            'CosmicRadioTV\Podcast\Components\FeedComponent' => 'feed',
+            'CosmicRadioTV\Podcast\Components\EpisodeComponent'       => 'podcastEpisode',
+            'CosmicRadioTV\Podcast\Components\LatestEpisodeComponent' => 'podcastLatestEpisode',
+            'CosmicRadioTV\Podcast\Components\EpisodesComponent'      => 'podcastEpisodes',
+            'CosmicRadioTV\Podcast\Components\FeedComponent'          => 'podcastFeed',
         ];
     }
 

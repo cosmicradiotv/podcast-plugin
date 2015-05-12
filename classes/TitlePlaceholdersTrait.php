@@ -1,6 +1,6 @@
 <?php
 
-namespace CosmicRadioTV\Podcast\classes;
+namespace CosmicRadioTV\Podcast\Classes;
 
 
 /**

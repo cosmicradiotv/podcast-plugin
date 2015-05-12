@@ -1,22 +1,22 @@
 <?php namespace CosmicRadioTV\Podcast\Components;
 
-use Cms\Classes\ComponentBase;
-use CosmicRadioTV\Podcast\classes\TitlePlaceholdersTrait;
+use CosmicRadioTV\Podcast\Classes\ComponentBase;
+use CosmicRadioTV\Podcast\Classes\TitlePlaceholdersTrait;
 use CosmicRadioTV\Podcast\Models\Release;
 use CosmicRadioTV\Podcast\Models\Show;
 use CosmicRadioTV\Podcast\Models;
-use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
+use CosmicRadioTV\Podcast\Models\Episode;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use URL;
 
-class Episode extends ComponentBase
+class EpisodeComponent extends ComponentBase
 {
 
     use TitlePlaceholdersTrait;
 
     /**
-     * @var EpisodeModel The show being displayed
+     * @var Episode The show being displayed
      */
     public $episode;
 

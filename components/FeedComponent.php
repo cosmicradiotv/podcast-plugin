@@ -3,9 +3,9 @@
 namespace CosmicRadioTV\Podcast\components;
 
 
-use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
-use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
+use CosmicRadioTV\Podcast\Classes\ComponentBase;
+use CosmicRadioTV\Podcast\Models\Episode;
 use CosmicRadioTV\Podcast\Models\Release;
 use CosmicRadioTV\Podcast\Models\ReleaseType;
 use CosmicRadioTV\Podcast\Models\Show;
@@ -124,7 +124,7 @@ class FeedComponent extends ComponentBase
      */
     protected function returnPagesList()
     {
-        return Page::sortBy('baseFileName')->lists('baseFileName', 'baseFileName');
+        return Page::getNameList();
     }
 
     public function getShowPageOptions()
@@ -194,7 +194,7 @@ class FeedComponent extends ComponentBase
                                      ->take(intval($this->property('itemLimit')))
                                      ->get();
 
-        $this->episodes->map(function (EpisodeModel $episode) use ($show) {
+        $this->episodes->map(function (Episode $episode) use ($show) {
             $episode->setRelation('show', $show);
         });
 
