@@ -3,6 +3,14 @@
 {% set show = __SELF__.show %}
 {% set episodes = __SELF__.episodes %}
 
+{% if __SELF__.meta_tags %}
+    {% put head %}
+        {% for meta_property, meta_content in __SELF__.meta_tags %}
+            <meta property="{{ meta_property|e('html_attr') }}" content="{{ meta_content|e('html_attr') }}" />
+        {% endfor %}
+    {% endput %}
+{% endif %}
+
 {% if show %}
     <div class="row">
         <div class="col-md-12">

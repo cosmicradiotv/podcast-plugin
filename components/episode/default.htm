@@ -1,16 +1,28 @@
+{% set show = __SELF__.show %}
+{% set episode = __SELF__.episode %}
+
+{% if __SELF__.meta_tags %}
+    {% put head %}
+        {% for meta_property, meta_content in __SELF__.meta_tags %}
+            <meta name="{{ meta_property|e('html_attr') }}" property="{{ meta_property|e('html_attr') }}" content="{{ meta_content|e('html_attr') }}" />
+        {% endfor %}
+    {% endput %}
+{% endif %}
+
+
 <div class="row">
     <div class="col-md-12">
-        <h2>{{__SELF__.show.name}}</h2>
-        <h3>{{ __SELF__.episode.title }}</h3>
+        <h2>{{ show.name }}</h2>
+        <h3>{{ episode.title }}</h3>
 
         {% partial __SELF__~"::player" %}
 
-        <p>{{ __SELF__.episode.summary|e|nl2br }}</p>
+        <p>{{ episode.summary|e|nl2br }}</p>
 
-        <p>Released: {{ __SELF__.episode.release|date("M d, Y")}} | Duration: {{ __SELF__.episode.length|sectotime }}</p>
+        <p>Released: {{ episode.release|date("M d, Y")}} | Duration: {{ episode.length|sectotime }}</p>
 
         <h3>Show Notes</h3>
 
-        {{ __SELF__.episode.content|raw }}
+        {{ episode.content|raw }}
     </div>
 </div>

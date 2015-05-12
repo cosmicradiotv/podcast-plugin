@@ -8,6 +8,7 @@ use CosmicRadioTV\Podcast\Models;
 use CosmicRadioTV\Podcast\Models\Episode as EpisodeModel;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use URL;
 
 class Episode extends ComponentBase
 {
@@ -18,6 +19,11 @@ class Episode extends ComponentBase
      * @var EpisodeModel The show being displayed
      */
     public $episode;
+
+    /**
+     * @var string[]
+     */
+    public $meta_tags = [];
 
     /**
      * @var Collection|Release[]
@@ -70,6 +76,12 @@ class Episode extends ComponentBase
                 'default'     => true,
                 'type'        => 'checkbox',
             ],
+            'metaTags'    => [
+                'title'       => 'cosmicradiotv.podcast::components.common.properties.meta_tags.title',
+                'description' => 'cosmicradiotv.podcast::components.common.properties.meta_tags.description',
+                'default'     => false,
+                'type'        => 'checkbox',
+            ],
         ];
     }
 
@@ -95,6 +107,10 @@ class Episode extends ComponentBase
 
         $this->addCss('/plugins/cosmicradiotv/podcast/assets/stylesheet/player.css');
         $this->addJs('/plugins/cosmicradiotv/podcast/assets/javascript/player.js');
+
+        if ($this->property('metaTags')) {
+            $this->setMetaTags();
+        }
 
         return null;
     }
@@ -136,6 +152,32 @@ class Episode extends ComponentBase
             'show'    => $this->show,
             'episode' => $this->episode,
         ];
+    }
+
+    /**
+     * Injects meta tags into the header
+     */
+    protected function setMetaTags()
+    {
+        if ($this->episode) {
+            $this->page->meta_title = $this->episode->title;
+            $this->page->meta_description = $this->episode->summary;
+
+            // Extra meta tags, available via {% placeholder head %}
+            $this->meta_tags = [
+                'twitter:card'   => 'summary',
+                'og:title'       => $this->episode->title,
+                'og:description' => $this->episode->summary,
+                'og:type'        => 'video.episode',
+                'og:url'         => $this->controller->currentPageUrl(),
+            ];
+
+            if ($this->episode->image) {
+                // Full path
+                $this->meta_tags['og:image'] = URL::to($this->episode->image->getPath());
+            }
+
+        }
     }
 
 }

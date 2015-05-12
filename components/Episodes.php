@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use October\Rain\Database\Builder;
+use URL;
 
 /**
  * Component that lists all of the episodes of a show
@@ -32,10 +33,14 @@ class Episodes extends ComponentBase
     public $episodes;
 
     /**
+     * @var string[]
+     */
+    public $meta_tags = [];
+
+    /**
      * @var Show The show being displayed
      */
     public $show;
-
     /**
      * @var Tag Tag to filter episodes by
      */
@@ -107,6 +112,12 @@ class Episodes extends ComponentBase
                 'default'     => true,
                 'type'        => 'checkbox',
             ],
+            'metaTags'        => [
+                'title'       => 'cosmicradiotv.podcast::components.common.properties.meta_tags.title',
+                'description' => 'cosmicradiotv.podcast::components.common.properties.meta_tags.description',
+                'default'     => false,
+                'type'        => 'checkbox',
+            ],
         ];
     }
 
@@ -128,6 +139,10 @@ class Episodes extends ComponentBase
 
         if ($this->property('updateTitle')) {
             $this->updateTitle();
+        }
+
+        if ($this->property('metaTags')) {
+            $this->setMetaTags();
         }
 
         return null;
@@ -187,8 +202,8 @@ class Episodes extends ComponentBase
               ->where('published', true)
               ->orderBy('release', 'desc');
 
-        if($this->tag) {
-            $query->whereHas('tags', function(Builder $q) {
+        if ($this->tag) {
+            $query->whereHas('tags', function (Builder $q) {
                 $q->where('cosmicradiotv_podcast_tags.id', $this->tag->id);
             });
         }
@@ -246,6 +261,33 @@ class Episodes extends ComponentBase
         return (object) [
             'show' => $this->show,
         ];
+    }
+
+    /**
+     * Injects meta tags into the header
+     */
+    protected function setMetaTags()
+    {
+        // Show related tags
+        if ($this->show) {
+            $this->page->meta_title = $this->show->name;
+            $this->page->meta_description = $this->show->description;
+
+            // Extra meta tags, available via {% placeholder head %}
+            $this->meta_tags = [
+                'twitter:card'   => 'summary',
+                'og:title'       => $this->show->name,
+                'og:description' => $this->show->description,
+                'og:type'        => 'video.tv_show',
+                'og:url'         => $this->controller->currentPageUrl(),
+            ];
+
+            if ($this->show->image) {
+                // Full path
+                $this->meta_tags['og:image'] = URL::to($this->show->image->getPath());
+            }
+
+        }
     }
 
 }

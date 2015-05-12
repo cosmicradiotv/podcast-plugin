@@ -10,8 +10,12 @@ return [
                 'title'       => "Episode's slug",
                 'description' => "The slug of the episode to load"
             ],
-            'tag_slug' => [
-                'title'       => "Tag's slug",
+            'meta_tags'    => [
+                'title'       => "Inject Meta Tags",
+                'description' => "Inject meta & social tags into header. Don't enable this on multiple components on the same page."
+            ],
+            'tag_slug'     => [
+                'title' => "Tag's slug",
             ],
             'update_title' => [
                 'title'       => 'Update page title',
@@ -53,7 +57,7 @@ return [
             'show_slug'        => [
                 'description' => 'The slug of the show to load. If left blank all episodes of all shows are used.',
             ],
-            'tag_slug'        => [
+            'tag_slug'         => [
                 'description' => 'The slug of the tag to filter by. Ignored if blank.',
             ],
         ],
