@@ -14,5 +14,6 @@ fields:
 
     size:
         label: cosmicradiotv.podcast::lang.release.size
+        commentAbove: cosmicradiotv.podcast::lang.release.size_comment
         placeholder: 0
         type: number

@@ -152,6 +152,7 @@ return [
         'url'             => 'URL',
         'url_placeholder' => 'https://mypodcasthost.com/new-release-media-url.mp4',
         'size'            => 'Release Size',
+        'size_comment'    => 'If set to 0 the plugin will attempt to determine the size automatically (only for video and audio releases).',
     ],
     'permissions'  => [
         'labels'     => [

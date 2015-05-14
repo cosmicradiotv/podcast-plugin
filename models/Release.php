@@ -73,4 +73,25 @@ class Release extends Model
         }
     }
 
+    /**
+     * Used to automatically set the size of the release (if size is set to 0)
+     */
+    public function beforeSave() {
+        $dirty = $this->getDirty();
+        if (in_array($this->release_type->type,['video','audio']) && $this->size == 0 && (isset($dirty['size']) || isset($dirty['url']))) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $this->url);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+            curl_setopt($ch, CURLOPT_HEADER, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_NOBODY, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_exec($ch);
+            
+            if (!curl_errno($ch)) {
+                 $this->size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+            }
+            curl_close($ch);
+        }
+    }
 }
