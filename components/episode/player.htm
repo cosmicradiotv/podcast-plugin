@@ -53,5 +53,15 @@
 
 </div>
 {% else %}
-
+<div class="crtv-podcast-player-container">
+    <div class="crtv-embed-responsive">
+        <div class="crtv-embed-audio" style="background-image: url('{{ __SELF__.episode.image ? __SELF__.episode.image.path : (__SELF__.show.image ? __SELF__.show.image.path : null) }}');">
+        </div>
+    </div>
+    <ul class="crtv-podcast-releases">
+        <li class="crtv-podcast-release">
+            <a class="crtv-podcast-release-link">No releases</a>
+        </li>
+    </ul>
+</div>
 {% endif %}
