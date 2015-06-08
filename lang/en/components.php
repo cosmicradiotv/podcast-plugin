@@ -25,7 +25,10 @@ return [
     ],
     'episode'        => [
         'name'        => 'Episode Component',
-        'description' => 'Used to display an Episode'
+        'description' => 'Used to display an Episode',
+        'groups'      => [
+            'filters'    => 'Filters',
+        ],
     ],
     'latest_episode' => [
         'name'        => 'Latest Episode Component',

@@ -6,8 +6,10 @@ use CosmicRadioTV\Podcast\Models\Release;
 use CosmicRadioTV\Podcast\Models\Show;
 use CosmicRadioTV\Podcast\Models;
 use CosmicRadioTV\Podcast\Models\Episode;
+use CosmicRadioTV\Podcast\Models\Tag;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use October\Rain\Database\Builder;
 use URL;
 
 class EpisodeComponent extends ComponentBase
@@ -36,6 +38,11 @@ class EpisodeComponent extends ComponentBase
     public $show;
 
     /**
+     * @var Tag The tag being used
+     */
+    public $tag;
+
+    /**
      * Component Details
      *
      * @return array
@@ -61,14 +68,21 @@ class EpisodeComponent extends ComponentBase
                 'description' => 'cosmicradiotv.podcast::components.common.properties.show_slug.description',
                 'default'     => '{{ :show_slug }}',
                 'type'        => 'string',
-                'required'    => true,
+                'group'       => trans('cosmicradiotv.podcast::components.episode.groups.filters'),
             ],
             'episodeSlug' => [
                 'title'       => 'cosmicradiotv.podcast::components.common.properties.episode_slug.title',
                 'description' => 'cosmicradiotv.podcast::components.common.properties.episode_slug.description',
-                'default'     => '{{ :show_slug }}',
+                'default'     => '{{ :episode_slug }}',
                 'type'        => 'string',
-                'required'    => true,
+                'group'       => trans('cosmicradiotv.podcast::components.episode.groups.filters'),
+            ],
+            'tagSlug'     => [
+                'title'       => 'cosmicradiotv.podcast::components.common.properties.tag_slug.title',
+                'description' => 'cosmicradiotv.podcast::components.episodes.properties.tag_slug.description',
+                'default'     => '',
+                'type'        => 'string',
+                'group'       => trans('cosmicradiotv.podcast::components.episode.groups.filters'),
             ],
             'updateTitle' => [
                 'title'       => 'cosmicradiotv.podcast::components.common.properties.update_title.title',
@@ -122,15 +136,12 @@ class EpisodeComponent extends ComponentBase
      */
     public function setState()
     {
-        $this->show = Show::query()
-                          ->where('slug', $this->property('showSlug'))
-                          ->firstOrFail();
-        $this->episode = $this->show->episodes()
-                                    ->getQuery()
-                                    ->where('published', true)
-                                    ->where('slug', $this->property('episodeSlug'))
-                                    ->with(['releases', 'releases.release_type', 'image', 'tags', 'show'])
-                                    ->firstOrFail();
+        $this->show = $this->loadShow();
+        if ($this->property('tagSlug')) {
+            $this->tag = Tag::query()->where('slug', $this->property('tagSlug'))->firstOrFail();
+        }
+        $this->episode = $this->loadEpisode();
+
         $this->releases = Collection::make($this->episode->releases); // Creates a copy
         $this->releases->sort(function (Release $a, Release $b) {
             // Order by the sort_order column
@@ -139,6 +150,85 @@ class EpisodeComponent extends ComponentBase
 
             return $aRating - $bRating;
         });
+    }
+
+    /**
+     * If a show is requested by slug loads it, or null if all shows (left blank)
+     *
+     * @throws ModelNotFoundException
+     * @return Show|null
+     */
+    protected function loadShow()
+    {
+        $slug = $this->property('showSlug');
+
+        if ($slug) {
+            return Show::query()->where('slug', $this->property('showSlug'))->firstOrFail();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Load the episode as requested
+     *
+     * @throws ModelNotFoundException
+     * @return Episode
+     */
+    protected function loadEpisode()
+    {
+        // Show filter / Query base
+        if ($this->show) {
+            // Show's episodes
+            $query = $this->show->episodes();
+            $setShow = true; // Skips loading from database
+            $latest = false; // In case of Show & Episode no need to find latest
+        } else {
+            // All shows' episodes
+            $query = Episode::query();
+            $query->with('show');
+            $setShow = false;
+            $latest = true;
+        }
+
+        // Episode slug filter
+        if($this->property('episodeSlug')) {
+            // Load specific episode, unless show isn't set
+            $latest = $latest || false;
+
+            $query->where('slug', $this->property('episodeSlug'));
+        } else {
+            // Load latest episode
+            $latest = true;
+        }
+
+        // Tag filter
+        if ($this->tag) {
+            $query->whereHas('tags', function (Builder $q) {
+                $q->where('cosmicradiotv_podcast_tags.id', $this->tag->id);
+            });
+        }
+
+        // Generic rules
+        $query->with(['releases', 'releases.release_type', 'image', 'tags'])
+              ->where('published', true);
+
+        // If latest also order by
+        if($latest) {
+            $query->orderBy('release', 'desc');
+        }
+
+        $episode = $query->firstOrFail();
+
+        if($setShow) {
+            // Set show on episode
+            $episode->setRelation('show', $this->show);
+        } else {
+            // Set component's show to episode's show
+            $this->show = $episode->show;
+        }
+
+        return $episode;
     }
 
     /**
