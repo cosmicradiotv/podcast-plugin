@@ -19,7 +19,6 @@ $(function () {
                             src: $target.data('crtv-podcast-player-item')
                         })
                     );
-                    console.log($embedEl);
                     break;
                 case 'video':
                     $embedEl = $('<video>').attr({
