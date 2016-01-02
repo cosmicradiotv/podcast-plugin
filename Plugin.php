@@ -3,6 +3,7 @@
 use Backend\Widgets\Lists;
 use System\Classes\PluginBase;
 use Backend;
+use BackendAuth;
 use Event;
 use CosmicRadioTV\Podcast\Models\Show;
 
@@ -62,13 +63,14 @@ class Plugin extends PluginBase
             /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
 
             if ($list->model instanceof \CosmicRadioTV\Podcast\Models\Show) {
-                if (!$list->getController()->user->hasAccess(['cosmicradiotv.podcast.access_shows_all'])) {
+                $user = BackendAuth::getUser();
+                if (!$user->hasAccess(['cosmicradiotv.podcast.access_shows_all'])) {
                     $shows = Show::all();
                     $show_ids_allowed = [];
 
                     // Fills the list of allowed show ids.
                     foreach ($shows as $show) {
-                        if ($list->getController()->user->hasAccess(['cosmicradiotv.podcast.access_show_' . $show->slug])) {
+                        if ($user->hasAccess(['cosmicradiotv.podcast.access_show_' . $show->slug])) {
                             $show_ids_allowed[] = $show->id;
                         }
                     }
